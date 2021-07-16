@@ -77,8 +77,6 @@
 
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -166,7 +164,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/07/15/compound-whitepaper/" class="post-title-link" itemprop="url">未命名</a>
+            <a href="/2021/07/15/compound-whitepaper/" class="post-title-link" itemprop="url">Compound 白皮书</a>
         </h2>
 
         <div class="post-meta">
@@ -183,7 +181,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-16 11:59:46" itemprop="dateModified" datetime="2021-07-16T11:59:46+08:00">2021-07-16</time>
+                <time title="修改时间：2021-07-16 15:15:32" itemprop="dateModified" datetime="2021-07-16T15:15:32+08:00">2021-07-16</time>
               </span>
 
           
@@ -200,9 +198,9 @@
           <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>加密货币和数字区块链资产市场已经发展成为一个充满活力的生态系统，由投资者、投机者和交易员组成，交换数以千计的区块链资产。不幸的是，金融市场的复杂性并没有跟上：参与者几乎没有交易资产时间价值的能力。</p>
 <p>利率填补了那些拥有不使用的剩余资产的人和那些没有资产(具有生产或投资用途)的人之间的缺口；交易资产的时间价值对双方都有利，并创造了非零和财富。对于区块链资产，目前存在两个主要缺陷：</p>
 <ol>
-<li><p>   借贷机制极其有限，这导致了资产定价错误(例如，“scamcoin”的估值深不可测，因为没有办法做空它们)。</p>
+<li><p>借贷机制极其有限，这导致了资产定价错误(例如，“scamcoin”的估值深不可测，因为没有办法做空它们)。</p>
 </li>
-<li><p>   区块链资产的收益率为负，这是由于巨大的存储成本和风险(包括场内和场外)，没有自然利率来抵消这些成本。这加剧了波动性，因为持有的积极性被打击了。</p>
+<li><p>区块链资产的收益率为负，这是由于巨大的存储成本和风险(包括场内和场外)，没有自然利率来抵消这些成本。这加剧了波动性，因为持有的积极性被打击了。</p>
 </li>
 </ol>
 <p>集中化的交易所(包括Bitfinex, Poloniex…)允许客户以保证金交易区块链资产，交易所内置了“借贷市场”。这些是基于信任的系统(你必须相信交易所不会被黑客攻击、携资产潜逃或错误地平仓)，仅限于特定的客户群体，仅限于少数(最主流的)资产。最后，余额和头寸都是虚拟的；你不能移动链上的头寸，例如在智能合约或 ICO 中使用借来的以太币或代币，这使得 dApps 无法访问这些工具。</p>
@@ -222,16 +220,15 @@
 <p>任何拥有所借资产的以太坊地址都可以调用清算功能，将其资产交换为借款人的 cToken 抵押品。由于两个用户、两个资产和价格都包含在 Compound 协议中，清算是无摩擦的，不依赖于任何外部系统或订单簿。</p>
 <h4 id="主要用户场景-1"><a href="#主要用户场景-1" class="headerlink" title="主要用户场景"></a>主要用户场景</h4><p>无缝地持有新资产(无需出售或重新安排投资组合)的能力给了dApp消费者、交易员和开发者新的超能力:</p>
 <ul>
-<li><p>   dApps 无需等待订单完成，也无需要求链下行为，可以借入代币用于在以太坊生态系统中使用，比如购买 Golem 网络上的计算能力</p>
+<li><p>dApps 无需等待订单完成，也无需要求链下行为，可以借入代币用于在以太坊生态系统中使用，比如购买 Golem 网络上的计算能力</p>
 </li>
-<li><p>   交易员可以使用他们现有的投资组合作为抵押，通过借入 Ether 为新的 ICO 投资融资。</p>
+<li><p>交易员可以使用他们现有的投资组合作为抵押，通过借入 Ether 为新的 ICO 投资融资。</p>
 </li>
-<li><p>   希望做空代币的交易员可以借入代币，将其发送到交易所并出售代币，从被高估的代币下跌中获利。</p>
+<li><p>希望做空代币的交易员可以借入代币，将其发送到交易所并出售代币，从被高估的代币下跌中获利。</p>
 </li>
 </ul>
 <h3 id="利率模型"><a href="#利率模型" class="headerlink" title="利率模型"></a>利率模型</h3><p>Compound 协议采用了一个利率模型，该模型在每个货币市场中基于供求关系实现利率均衡，而不是(要求)单独的供应商或借款人必须就条款和利率进行谈判。根据经济理论，利率(货币的“价格”)应该随着需求的增加而增加；当需求低时，利率应该低，当需求高时，反之亦然。每个市场 a 的利用率 U 将供给和需求统一为一个变量:</p>
-<p>$$ U_a = Borrows_a / (Cash_a + Borrows_a) $$</p>
-<p>需求曲线通过治理被编码，并表示为利用率的函数。例如，借款利率可能类似于以下情况:</p>
+<script type="math/tex; mode=display">U_a = Borrows_a / (Cash_a + Borrows_a)</script><p>需求曲线通过治理被编码，并表示为利用率的函数。例如，借款利率可能类似于以下情况:</p>
 <p>Borrowing Interest Ratea = 2.5% + Ua * 20%</p>
 <p>供应商赚取的利率是隐性的，它等于借款利率乘以利用率。</p>
 <h4 id="流动性激励结构"><a href="#流动性激励结构" class="headerlink" title="流动性激励结构"></a>流动性激励结构</h4><p>该协议并不保证流动性;相反，它依赖于利率模型来激励它。在对资产的极端需求时期，协议的流动性(可提取或借入的代币)将下降;当这种情况发生时，利率上升，刺激供应，抑制借贷。</p>
@@ -239,6 +236,7 @@
 <h3 id="cToken-合约"><a href="#cToken-合约" class="headerlink" title="cToken 合约"></a>cToken 合约</h3><p>每个货币市场都被构建为实现ERC-20令牌规范的智能合约。用户的余额以cToken余额表示;用户可以通过向市场提供资产来铸造(uint数量)ctoken，或为基础资产赎回(uint数量)ctoken。ctoken和标的资产之间的价格(汇率)随着时间的推移而增加，因为资产的借款人累积了利息，等于:</p>
 <p>exchangeRate = (underlyingBalance +totalBorrowBalancea − reserves a) / cTokenSupplya</p>
 <p>随着市场的总借款余额增加(作为借款人利息增长的函数)，ctoken和基础资产之间的汇率会增加。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -246,7 +244,8 @@
 <th>描述</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>mint(uint256 amountUnderlying)</td>
 <td>将基础资产转移到市场，更新信息。发送方的cToken平衡。</td>
 </tr>
@@ -266,7 +265,9 @@
 <td>liquidate(address borrower,address collateralAsset, uint closeAmount)</td>
 <td>将基础资产转移到市场，更新借款人的借款余额，然后将cToken抵押品从借款人转移到短信发送方</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h3 id="利率的机械师"><a href="#利率的机械师" class="headerlink" title="利率的机械师"></a>利率的机械师</h3><p>复合货币市场的定义是一个利率，统一适用于所有借款人，随着时间的推移，随着供求关系的变化而调整。</p>
 <p>对于每个货币市场，每个利率的历史记录都由一个利率指数来获取，利率指数是在用户铸造、赎回、借贷、偿还或清算资产导致利率变化时计算出来的。</p>
 <h4 id="Market-Dynamics"><a href="#Market-Dynamics" class="headerlink" title="Market Dynamics"></a>Market Dynamics</h4><p>每次交易发生时，该资产的利率指数都会更新，以复利计算自前一个指数以来的利息，使用期间的利息，以r * t计值，并以每一组利率计算:</p>
@@ -286,25 +287,25 @@
 <h3 id="治理"><a href="#治理" class="headerlink" title="治理"></a>治理</h3><p>Compound将从协议的集中控制(例如选择每个资产的利率模型)开始，随着时间的推移，将过渡到完整的社区和涉众控制。</p>
 <p>协议中的以下权限由admin控制:</p>
 <ul>
-<li><p>   能够上市一个新的cToken市场</p>
+<li><p>能够上市一个新的cToken市场</p>
 </li>
-<li><p>   能够更新每个市场的利率模型</p>
+<li><p>能够更新每个市场的利率模型</p>
 </li>
-<li><p>   更新oracle地址的能力</p>
+<li><p>更新oracle地址的能力</p>
 </li>
-<li><p>   能够提取cToken的储备</p>
+<li><p>能够提取cToken的储备</p>
 </li>
-<li><p>   可以选择一个新的管理员，比如社区控制的DAO;因为这个DAO本身可以选择一个新的管理，所以管理可以根据涉众的决定随时间发展</p>
+<li><p>可以选择一个新的管理员，比如社区控制的DAO;因为这个DAO本身可以选择一个新的管理，所以管理可以根据涉众的决定随时间发展</p>
 </li>
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li><p>   Compound 为以太坊资产创建了正常运行的货币市场</p>
+<li><p>Compound 为以太坊资产创建了正常运行的货币市场</p>
 </li>
-<li><p>   每个货币市场的利率是由基础资产的供求决定的;当对一种资产的借贷需求增加，或者当供给减少时，利率就会上升，从而刺激额外的流动性</p>
+<li><p>每个货币市场的利率是由基础资产的供求决定的;当对一种资产的借贷需求增加，或者当供给减少时，利率就会上升，从而刺激额外的流动性</p>
 </li>
-<li><p>   用户可以向货币市场提供代币以赚取利息，而无需信任中央机构</p>
+<li><p>用户可以向货币市场提供代币以赚取利息，而无需信任中央机构</p>
 </li>
-<li><p>   用户可以通过使用他们在协议中的余额作为抵押来借用代币（使用、出售或再借出）</p>
+<li><p>用户可以通过使用他们在协议中的余额作为抵押来借用代币（使用、出售或再借出）</p>
 </li>
 </ul>
 
@@ -392,6 +393,10 @@
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
   </nav>
 </div>
 
@@ -473,6 +478,61 @@
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
