@@ -181,7 +181,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-16 15:15:32" itemprop="dateModified" datetime="2021-07-16T15:15:32+08:00">2021-07-16</time>
+                <time title="修改时间：2021-07-16 18:09:11" itemprop="dateModified" datetime="2021-07-16T18:09:11+08:00">2021-07-16</time>
               </span>
 
           
@@ -229,13 +229,12 @@
 </ul>
 <h3 id="利率模型"><a href="#利率模型" class="headerlink" title="利率模型"></a>利率模型</h3><p>Compound 协议采用了一个利率模型，该模型在每个货币市场中基于供求关系实现利率均衡，而不是(要求)单独的供应商或借款人必须就条款和利率进行谈判。根据经济理论，利率(货币的“价格”)应该随着需求的增加而增加；当需求低时，利率应该低，当需求高时，反之亦然。每个市场 a 的利用率 U 将供给和需求统一为一个变量:</p>
 <script type="math/tex; mode=display">U_a = Borrows_a / (Cash_a + Borrows_a)</script><p>需求曲线通过治理被编码，并表示为利用率的函数。例如，借款利率可能类似于以下情况:</p>
-<p>Borrowing Interest Ratea = 2.5% + Ua * 20%</p>
-<p>供应商赚取的利率是隐性的，它等于借款利率乘以利用率。</p>
-<h4 id="流动性激励结构"><a href="#流动性激励结构" class="headerlink" title="流动性激励结构"></a>流动性激励结构</h4><p>该协议并不保证流动性;相反，它依赖于利率模型来激励它。在对资产的极端需求时期，协议的流动性(可提取或借入的代币)将下降;当这种情况发生时，利率上升，刺激供应，抑制借贷。</p>
-<h2 id="实现和架构"><a href="#实现和架构" class="headerlink" title="实现和架构"></a>实现和架构</h2><p>复合货币市场的核心是一个账本，它允许以太坊账户提供或借入资产，同时计算利息，这是一个时间函数。该协议的智能合约将公开访问，机器、dapp和人类将完全免费使用。</p>
-<h3 id="cToken-合约"><a href="#cToken-合约" class="headerlink" title="cToken 合约"></a>cToken 合约</h3><p>每个货币市场都被构建为实现ERC-20令牌规范的智能合约。用户的余额以cToken余额表示;用户可以通过向市场提供资产来铸造(uint数量)ctoken，或为基础资产赎回(uint数量)ctoken。ctoken和标的资产之间的价格(汇率)随着时间的推移而增加，因为资产的借款人累积了利息，等于:</p>
-<p>exchangeRate = (underlyingBalance +totalBorrowBalancea − reserves a) / cTokenSupplya</p>
-<p>随着市场的总借款余额增加(作为借款人利息增长的函数)，ctoken和基础资产之间的汇率会增加。</p>
+<script type="math/tex; mode=display">Borrowing\,Interest\,Rate_a = 2.5\% + U_a * 20\%</script><p>供应商赚取的利率是隐性的，它等于借款利率乘以利用率。</p>
+<h4 id="流动性激励结构"><a href="#流动性激励结构" class="headerlink" title="流动性激励结构"></a>流动性激励结构</h4><p>该协议并不保证流动性；相反，它依赖于利率模型来激励它。在对资产的极端需求时期，协议的流动性(可提取或借入的代币)将下降；当这种情况发生时，利率上升，刺激供应，抑制借贷。</p>
+<h2 id="实现和架构"><a href="#实现和架构" class="headerlink" title="实现和架构"></a>实现和架构</h2><p>Compound 货币市场的核心是一个账本，它允许以太坊账户提供或借入资产，同时计算利息，这是一个时间函数。该协议的智能合约将公开访问，机器、dapp和人类将完全免费使用。</p>
+<h3 id="cToken-合约"><a href="#cToken-合约" class="headerlink" title="cToken 合约"></a>cToken 合约</h3><p>每个货币市场都被构建为实现 ERC-20 令牌规范的智能合约。用户的余额以 cToken 余额表示；用户可以通过向市场提供资产来铸造(<code>mint(uint
+amountUnderlying)</code>) cTokens，或为基础资产赎回(<code>redeem(uint amount)</code>) cTokens。cTokens 和基础资产之间的价格(汇率)随着时间的推移而增加，因为资产的借款人会产生利息，等于:</p>
+<script type="math/tex; mode=display">exchangeRate = \frac{(underlyingBalance + totalBorrowBalance_a − reserves_a)}{cTokenSupply_a}</script><p>随着市场的总借款余额增加(作为借款人利息增长的函数)，ctoken和基础资产之间的汇率会增加。</p>
 <div class="table-container">
 <table>
 <thead>
@@ -247,61 +246,61 @@
 <tbody>
 <tr>
 <td>mint(uint256 amountUnderlying)</td>
-<td>将基础资产转移到市场，更新信息。发送方的cToken平衡。</td>
+<td>将基础资产转移到市场，更新调用者(msg.sender) 的 cToken 余额</td>
 </tr>
 <tr>
 <td>redeem(uint256 amount) <br> redeemUnderlying(uint256 <br> amountUnderlying)</td>
-<td>将基础资产转移出市场，更新信息。发送方的cToken平衡。</td>
+<td>将基础资产转移出市场，更新调用者(msg.sender) 的 cToken 余额</td>
 </tr>
 <tr>
 <td>borrow(uint amount)</td>
-<td>检查味精。发送方抵押价值，如果足够，将标的资产转移出市场。发送者，并更新msg。发送者的借贷平衡。</td>
+<td>检查调用者(msg.sender) 的抵押品价值，如果足够，将标的资产转移出市场，转到调用者(msg.sender)，并更新调用者(msg.sender)的借贷余额</td>
 </tr>
 <tr>
 <td>repayBorrow(uint amount) <br> repayBorrowBehalf(address account, uint amount)</td>
-<td>将标的资产转入市场，更新借款人的借款余额。</td>
+<td>将基础资产转入市场，更新借款人的借款余额。</td>
 </tr>
 <tr>
 <td>liquidate(address borrower,address collateralAsset, uint closeAmount)</td>
-<td>将基础资产转移到市场，更新借款人的借款余额，然后将cToken抵押品从借款人转移到短信发送方</td>
+<td>将基础资产转移到市场，更新借款人的借款余额，然后将 cToken 抵押品从借款人转移到调用者(msg.sender)</td>
 </tr>
 </tbody>
 </table>
 </div>
-<h3 id="利率的机械师"><a href="#利率的机械师" class="headerlink" title="利率的机械师"></a>利率的机械师</h3><p>复合货币市场的定义是一个利率，统一适用于所有借款人，随着时间的推移，随着供求关系的变化而调整。</p>
-<p>对于每个货币市场，每个利率的历史记录都由一个利率指数来获取，利率指数是在用户铸造、赎回、借贷、偿还或清算资产导致利率变化时计算出来的。</p>
-<h4 id="Market-Dynamics"><a href="#Market-Dynamics" class="headerlink" title="Market Dynamics"></a>Market Dynamics</h4><p>每次交易发生时，该资产的利率指数都会更新，以复利计算自前一个指数以来的利息，使用期间的利息，以r * t计值，并以每一组利率计算:</p>
-<p>此外少公式</p>
-<p>市场的未偿还借款总额会更新，纳入自上一指数以来累积的利息:</p>
-<p>此处少公式</p>
-<p>部分应计利息被保留(留出)作为准备金，由reserveFactor决定，范围从0到1:</p>
-<p>此处少公式</p>
-<h4 id="Borrower-Dynamics"><a href="#Borrower-Dynamics" class="headerlink" title="Borrower Dynamics"></a>Borrower Dynamics</h4><p>借款人的余额(包括应计利息)只是当前指数除以上次检查点时用户余额的指数的比率。</p>
-<p>cToken中每个借款人地址的余额存储为一个帐户检查点。帐户检查点为solid tuple 。此元组描述最后一次将利息应用到该帐户时的余额。</p>
-<h3 id="Borrowing"><a href="#Borrowing" class="headerlink" title="Borrowing"></a>Borrowing</h3><p>希望借款且在Compound中存储有足够余额的用户可以在相关的cToken合同上调用借款(uint金额)。该函数调用检查用户的账户价值，并给予足够的抵押品，将更新用户的借款余额，将代币转移到用户的以太坊地址，并更新货币市场的浮动利率。</p>
-<p>借款应计利息的方式与余额利息在第3.2节中计算的方式完全相同;借款人有权在任何时候通过“还款额”(uint amount)来偿还未偿贷款。</p>
-<h3 id="Liquidation"><a href="#Liquidation" class="headerlink" title="Liquidation"></a>Liquidation</h3><p>如果用户的借款余额由于抵押品的价值下降而超过了他们的总抵押品价值(借款能力)，或者借入的资产价值增加，则可以调用公共功能清算(address target, address collateralAsset, address borrowAsset, uint closeAmount)，它以略高于市场价格的价格，将调用用户的资产交换为借款人的抵押品。</p>
-<h3 id="Price-Feeds"><a href="#Price-Feeds" class="headerlink" title="Price Feeds"></a>Price Feeds</h3><p>Price Oracle维持每种支持资产的当前汇率;Compound协议将设定资产价值的能力委托给一个委员会，该委员会从前10个交易所汇集价格。这些汇率被用来确定借款能力和担保要求，以及所有需要计算账户等价价值的职能。</p>
-<h3 id="Comptroller"><a href="#Comptroller" class="headerlink" title="Comptroller"></a>Comptroller</h3><p>复合协议默认情况下不支持特定的令牌;相反，市场必须被列入白名单。这是通过管理功能supportMarket(地址市场，地址利率模型)实现的，该功能允许用户开始与资产交互。为了借到一项资产，必须有一个价格甲骨文的有效价格;为了使用资产作为抵押品，必须有一个有效的价格和一个抵押品因子。</p>
-<p>每个函数调用都通过策略层(称为Comptroller)进行验证;在允许用户操作进行之前，该合同确认抵押品和流动性。</p>
-<h3 id="治理"><a href="#治理" class="headerlink" title="治理"></a>治理</h3><p>Compound将从协议的集中控制(例如选择每个资产的利率模型)开始，随着时间的推移，将过渡到完整的社区和涉众控制。</p>
-<p>协议中的以下权限由admin控制:</p>
+<h3 id="利率机制"><a href="#利率机制" class="headerlink" title="利率机制"></a>利率机制</h3><p>Compound 货币市场由利率定义，统一适用于所有借款人，随着供求关系的变化而调整。</p>
+<p>每一个货币市场，每个利率的历史记录由<em>利率指数</em>捕获，该指数在每次由于用户铸造、赎回、借入、偿还或清算资产而导致的利率变化时计算。</p>
+<h4 id="市场动态"><a href="#市场动态" class="headerlink" title="市场动态"></a>市场动态</h4><p>每次交易发生时，该资产的利率指数都会被更新，以复利的方式计算自上一次指数以来的利息。自上一次指数以来的利息，使用该期间的利息，以 r*t 为单位，使用每个区块的利率计算：</p>
+<script type="math/tex; mode=display">Index_{a,n} = Index_{a,(n-1)} * {( 1 + r*t)}</script><p>市场的未偿还借款总额会更新，纳入自上一指数以来累积的利息:</p>
+<script type="math/tex; mode=display">totalBorrowBalance_{a,n} = totalBorrowBalance_{a,(n-1)} * (1 + r*t)</script><p>部分应计利息被保留(留出)作为准备金，由 <em>reserveFactor</em> 决定，范围从 0 到 1:</p>
+<script type="math/tex; mode=display">reserves_a = reserves_{a,(n-1)} + totalBorrowBalance_{a,(n-1)} * (r*t*eserveFactor)</script><h4 id="借款人动态"><a href="#借款人动态" class="headerlink" title="借款人动态"></a>借款人动态</h4><p>借款人的余额，包括应计利息，只是当前指数除以用户余额上次检查点时的指数的比率。</p>
+<p>cToken 中每个借款人地址的余额被存储为一个帐户检查点。帐户检查点为 Solidity 元组 &#60;uint256 balance, uint256 interestIndex&#62;。这个元组描述的是在最后一次将利息应用到该账户时的余额。</p>
+<h3 id="借款"><a href="#借款" class="headerlink" title="借款"></a>借款</h3><p>希望借款且在 Compound 中存储有足够余额的用户可以在相关的 cToken 合约上调用 <code>borrow(uint amount)</code>。该函数调用检查用户的账户价值，并给予足够的抵押品，更新用户的借款余额，将代币转移到用户的以太坊地址，并更新货币市场的浮动利率。</p>
+<p>借款的计息方式与第3.2节中计算余额利息的方式完全相同；借款人有权在任何时候通过调用 <code>repayBorrow(uint
+amount)</code> 来偿还未偿贷款。</p>
+<h3 id="清算"><a href="#清算" class="headerlink" title="清算"></a>清算</h3><p>如果用户的借款余额由于抵押品的价值下降而超过了他们的总抵押品价值(借款能力)，或者借入的资产价值增加，则可以调用公共函数 <code>liquidate(address target, address collateralAsset, address borrowAsset, uint
+closeAmount)</code> 功能清算，它以略高于市场价格的价格，将调用用户的资产交换为借款人的抵押品。</p>
+<p>如果用户的借款余额由于抵押品价值下降或借入资产价值增加而超过其抵押品总价值（借款能力），则可以调用公共函数，该函数将调用用户的资产换成借款人的抵押品，价格略有下降。 比市场价好。</p>
+<p>如果一个用户的借贷余额超过了他们的总抵押品价值（借贷能力），由于抵押品的价值下降，或借款资产的价值增加，则可以调用公共函数，这个函数以略高于市场的价格，交换调用者的资产来换取取借款人的抵押品。</p>
+<h3 id="价格反馈"><a href="#价格反馈" class="headerlink" title="价格反馈"></a>价格反馈</h3><p><em>价格预言机</em>维持每种支持资产的当前汇率；Compound 协议将设定资产价值的能力委托给一个委员会，该委员会从前10个交易所汇集价格。这些汇率被用来确定借款能力和担保要求，以及所有需要计算账户等价价值的职能。</p>
+<h3 id="审计"><a href="#审计" class="headerlink" title="审计"></a>审计</h3><p>Compound 协议默认不支持特定的令牌； 相反，市场必须被列入白名单。这是通过一个管理函数实现的，<code>supportMarket(address market, address interest rate model)</code> 函数允许用户开始与资产交互。为了借到一项资产，必须有一个来自价格预言机的有效价格；为了使用资产作为抵押品，必须有一个有效的价格和一个抵押品因子。</p>
+<p>每个函数调用都通过一个策略层进行验证，这个策略层被称为 “Comptroller”； 该合约在允许用户操作之前验证抵押品和流动性。</p>
+<h3 id="治理"><a href="#治理" class="headerlink" title="治理"></a>治理</h3><p>Compound 将从协议的集中控制(例如选择每个资产的利率模型)开始，随着时间的推移，将过渡到完整的社区和相关方控制。 协议中的以下权限由 admin 控制:</p>
 <ul>
-<li><p>能够上市一个新的cToken市场</p>
+<li><p>上一个新的 cToken 市场的能力</p>
 </li>
-<li><p>能够更新每个市场的利率模型</p>
+<li><p>更新每个市场的利率模型的能力</p>
 </li>
-<li><p>更新oracle地址的能力</p>
+<li><p>更新预言机地址的能力</p>
 </li>
-<li><p>能够提取cToken的储备</p>
+<li><p>提取 cToken 储备的能力</p>
 </li>
-<li><p>可以选择一个新的管理员，比如社区控制的DAO;因为这个DAO本身可以选择一个新的管理，所以管理可以根据涉众的决定随时间发展</p>
+<li><p>选择一个新的管理员的能力，比如社区控制的 DAO；因为这个 DAO 本身可以选择一个新的管理，所以管理可以根据相关方的决定随时间发展</p>
 </li>
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><p>Compound 为以太坊资产创建了正常运行的货币市场</p>
 </li>
-<li><p>每个货币市场的利率是由基础资产的供求决定的;当对一种资产的借贷需求增加，或者当供给减少时，利率就会上升，从而刺激额外的流动性</p>
+<li><p>每个货币市场的利率是由基础资产的供求决定的；当对一种资产的借贷需求增加，或者当供给减少时，利率就会上升，从而刺激额外的流动性</p>
 </li>
 <li><p>用户可以向货币市场提供代币以赚取利息，而无需信任中央机构</p>
 </li>
