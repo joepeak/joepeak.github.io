@@ -150,6 +150,147 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/21/compound-protocol/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="乔疯">
+      <meta itemprop="description" content="DeFi，区块链的大海星辰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DeFi 研究社">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/21/compound-protocol/" class="post-title-link" itemprop="url">Compound 协议</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-07-21 15:33:39 / 修改时间：18:15:30" itemprop="dateCreated datePublished" datetime="2021-07-21T15:33:39+08:00">2021-07-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Compound-简介"><a href="#Compound-简介" class="headerlink" title="Compound 简介"></a>Compound 简介</h2><p>Compound 是一个去中心化的货币市场, 对标传统金融行业的产品就是余额宝了：你有一点闲钱，存进余额宝里能每天赚点利息；类似的当你有一点加密货币资产比如 BTC、ETH，放进通过 Compound 协议搭建的货币市场里就能币生币，从而保持资产增值。</p>
+<p>现实世界中每一种资产都具有时间价值，通过利息这一强大工具，可以让放贷方、借款方达成跨期价值交换。</p>
+<p>在加密货币市场上存在两个核心问题：</p>
+<ol>
+<li><p>市场上加密币借贷机制极为有限，导致很多资产错误定价，例如由于缺少做空手段，一些垃圾币市值依然很高。</p>
+</li>
+<li><p>由于加密币资产天然的波动性，持有加密币资产可能为负收益。单纯持有加密币并无激励，市场没有一套有效的利率机制来抵消波动风险和持有成本。</p>
+</li>
+</ol>
+<p>针对这两个问题，Compound 提供了自己的借款解决方案。</p>
+<h2 id="Compound-模型"><a href="#Compound-模型" class="headerlink" title="Compound 模型"></a>Compound 模型</h2><h3 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h3><p>在理解 Compound 协议模型之前，我们需要首先弄明白下面几个概念。</p>
+<ul>
+<li><p>标的资产，也就是我们真正进行借贷的资产，比如 ETH、USDT、USDC、WBTC 等。</p>
+</li>
+<li><p>cToken，也就是我们在 Compound 上存入资产的凭证。取款时就可以用 cToken 换回标的资产。</p>
+<p>每一种标的资产都有对应的一种 cToken，比如，ETH 对应 cETH，USDT 对应 cUSDT，当用户向 Compound 存入 ETH 则会返回 cETH。</p>
+</li>
+<li><p>兑换率，cToken 与标的资产的兑换率。兑换率会随着时间推移不断上涨，上涨的部分正是用户存入资产所生成的利息。</p>
+<p>比如 cETH 的兑换率为 0.02，即 1 个 cETH 可以兑换 0.02 个 ETH。</p>
+</li>
+<li><p>抵押因子，每种标的资产都有一个抵押因子，代表用户抵押的资产价值对应可得到的借款的比率，即用来衡量可借额度的。</p>
+<p>抵押因子取值范围 0-1，当为 0 时，表示该类资产不能作为抵押品去借贷其他资产。一般最高设为 0.75，比如 ETH，假如用户存入了 0.1 个 ETH 并开启作为抵押品，当时的 ETH 价值为 2000 美元，则可借额度为 0.1 <em> 2000 </em> 0.75 = 150 美元，可最多借出价值 150 美元的其他资产。</p>
+</li>
+<li><p>资产利用率，在货币市场的资金池中，借款金额的占比。资产利用率在于度量资金的使用效率，越高越好，代表资金的效率越高。</p>
+</li>
+<li><p>备用金，Compound 会对每一笔借款的利息收益，按照备用金因子计提一笔备用金，作为平台收益。</p>
+</li>
+<li><p>借款利率，借款人需要按照一定的利息来支付给放贷人。借款利率和存款利率，我们在下面会详细说明，这里略过不提。</p>
+</li>
+<li><p>存款利率，即放贷利率。</p>
+</li>
+</ul>
+<h4 id="兑换率的计算"><a href="#兑换率的计算" class="headerlink" title="兑换率的计算"></a>兑换率的计算</h4><p>放贷人将标的资产存入货币市场时候，平台会按照平台实时兑换率 exchangeRate，将标的兑换为平台的 cToken，此过程称之为铸币（Mint Token）<br>放贷人可以随时终止放贷，不需要等待借款资产到期。放贷人将放贷的本金、利息收入赎回（Redeem）时候，平台会按照实时兑换率将放贷人持有的 cToken 转为对应的标的。</p>
+<p>兑换率公式如下：</p>
+<script type="math/tex; mode=display">兑换率 = \frac{(totalCash + totalBorrows − totalReserves)}{totalSupply}</script><p>在上面的公式中：</p>
+<ul>
+<li><p>totalCash = 放入智能合约中，但是还没有被借走的标的资产总量</p>
+</li>
+<li><p>totalBorrows = 所有借款人应该偿还的所有标的资产总量（包含本金和利息）</p>
+</li>
+<li><p>totalSupply = 所有放贷人获得的 cToken 总量</p>
+</li>
+</ul>
+<p>通过上面的公式可以看出： 借款量越多，兑换率增加越快。(因為所需支付利息增加越快)</p>
+<h4 id="资产利用率的计算"><a href="#资产利用率的计算" class="headerlink" title="资产利用率的计算"></a>资产利用率的计算</h4><p>资产利用率公式如下：</p>
+<script type="math/tex; mode=display">资产利用率 = \frac{totalBorrows}{(totalCash + totalBorrows – totalReserves)}</script><p>资产利用率公式中每部分的含义如上所述。</p>
+<p>通过上面的公式可以看出： 借款量越多，资产利用率也越高，这也和我们的实际经验相符合。</p>
+<h4 id="借款利率"><a href="#借款利率" class="headerlink" title="借款利率"></a>借款利率</h4><p>Compound借款利率有两个版本，1.0版本为线性利率模型，2.0版本为分段利率模型，1.0版本是2.0版本的特殊情况。 2.0版本的核心思路：如果使用率超过一定比例（kink），则使用分段利率，否则则采用1.0版本的利率模型。</p>
+<p>对于 2.0 的利率模型，可以称之为拐点型。</p>
+<p>如果资产利用率小于等于指定比例，则借款利率公式如下：</p>
+<script type="math/tex; mode=display">借款利率 = baseRate + utilizationRate * multiplier</script><p>如果资产利用率大于指定比例，则借款利率公式如下：</p>
+<script type="math/tex; mode=display">借款利率 = baseRate + utilizationRate*multiplier + (utilizationRate-kink) * jumpMultiplier</script><p>在上面的公式中：</p>
+<ul>
+<li><p>baseRate，基础利率。基础可以参考代码。</p>
+</li>
+<li><p>utilizationRate，资产利用率</p>
+</li>
+<li><p>multiplier、jumpMultiplier，为对应的乘数，参考代码。</p>
+</li>
+</ul>
+<p>对于 1.0 的利率模型，可以称之为直线型，就是资产利用率小于等于指定比例时的特殊情况。</p>
+<h4 id="存款利率"><a href="#存款利率" class="headerlink" title="存款利率"></a>存款利率</h4><p>存款利率与借款利率和资产利用率都有关系，具体如下：</p>
+<script type="math/tex; mode=display">存款利率 = borrowRate * (1 – reserveFactor) * utilizationRate</script><p>在上面的公式中：</p>
+<ul>
+<li><p>borrowRate 就是借款利率</p>
+</li>
+<li><p>reserveFactor，备用金因子</p>
+</li>
+<li><p>utilizationRate，就是资产利用率</p>
+</li>
+</ul>
+<h3 id="Compound-基本架构"><a href="#Compound-基本架构" class="headerlink" title="Compound 基本架构"></a>Compound 基本架构</h3><p>俗话说一图胜千言，我们使用下面的图为例来说明 Compound 的架构</p>
+<p><img src="http://blockchain.szdyfjh.com/compound1.png" alt=""></p>
+<p>在这篇文章中，我们以 DAI 来例来说明这个架构。首先，存款人即放贷人将一定量的 DAI 存入智能合约中，即可立即完成放贷从而产生利率，而借款人可以通过抵押一定量的标的资产（这里以 ETH 为例子）借出智能合约中的 DAI，并按照一定利率来支付利息。</p>
+<p>对于这个架构，我们需要知道的是：</p>
+<ol>
+<li><p>借款人可以抵押 Compound 支持的任何资产，但为了防止借款人付不出利息，借出的总资产必须小于抵押资产的一定数量。</p>
+</li>
+<li><p>借款人支付的利息按照每个放贷者的资产比例平均分配给所有的放贷者。</p>
+</li>
+<li><p>借款人可以随时还款，还款时依据借款利率与时间，决定总的还款数量。同样，放贷人可以随时连本带利提出 DAI，但前提是智能合约中必须有足够的 DAI，由于备用金机制，几乎不可能有提不出资产的情况。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/15/compound-whitepaper/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -181,7 +322,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-16 18:13:54" itemprop="dateModified" datetime="2021-07-16T18:13:54+08:00">2021-07-16</time>
+                <time title="修改时间：2021-07-21 15:53:51" itemprop="dateModified" datetime="2021-07-21T15:53:51+08:00">2021-07-21</time>
               </span>
 
           
@@ -388,12 +529,12 @@ closeAmount)</code> 功能清算，它以略高于市场价格的价格，将调
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
