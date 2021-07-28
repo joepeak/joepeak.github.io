@@ -159,6 +159,161 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/26/contract-proxy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="乔疯">
+      <meta itemprop="description" content="DeFi，区块链的大海星辰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DeFi 研究社">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/26/contract-proxy/" class="post-title-link" itemprop="url">可升级的智能合约(未完待续)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-07-26 14:52:14 / 修改时间：17:06:11" itemprop="dateCreated datePublished" datetime="2021-07-26T14:52:14+08:00">2021-07-26</time>
+            </span>
+
+          
+            <span id="/2021/07/26/contract-proxy/" class="post-meta-item leancloud_visitors" data-flag-title="可升级的智能合约(未完待续)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>以太坊的最大优势之一是其公共账本的不可篡改性，包括：Token 的转移、合约的部署以及合约交易。以太坊网络上的任何节点都可以验证每笔交易的有效性和状态，从而使以太坊成为一个非常强大的去中心化系统。</p>
+<p>但最大的缺点是，智能合约一旦部署后，则无法更改合约源码。中心化应用程序（例如Facebook或Airbnb）的开发人员会经常对程序进行更新，修复bug或引入新功能。而这种方式在以太坊上是不可能做到的。</p>
+<p>虽然无法更新已部署的智能合约代码，但是可以通过设置一个代理合约架构，进而部署新的合约，以实现合约升级的目的。</p>
+<p>代理模式使得所有消息调用都通过代理合约，代理合约会将调用请求重定向到最新部署的合约中。如要升级时，将升级后新合约地址更新到代理合约中即可。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/07/26/contract-proxy/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/22/compound-sourcecode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="乔疯">
+      <meta itemprop="description" content="DeFi，区块链的大海星辰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DeFi 研究社">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/22/compound-sourcecode/" class="post-title-link" itemprop="url">Compound 源码解析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-22 14:13:13" itemprop="dateCreated datePublished" datetime="2021-07-22T14:13:13+08:00">2021-07-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-28 18:49:16" itemprop="dateModified" datetime="2021-07-28T18:49:16+08:00">2021-07-28</time>
+              </span>
+
+          
+            <span id="/2021/07/22/compound-sourcecode/" class="post-meta-item leancloud_visitors" data-flag-title="Compound 源码解析" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>通过前两篇文章，我们对 Compound 已经有了相当的了解。作为一个完整的借贷项目，Compound 涉及到非常多的内容，但是对于区块链项目来说，智能是其灵魂所在，今天这篇文章我们就从合约的角度来分析下 Compound。 闲话少说，进入正题。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/07/22/compound-sourcecode/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/21/compound-protocol/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -182,10 +337,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-07-21 15:33:39 / 修改时间：18:27:26" itemprop="dateCreated datePublished" datetime="2021-07-21T15:33:39+08:00">2021-07-21</time>
+              <time title="创建时间：2021-07-21 15:33:39" itemprop="dateCreated datePublished" datetime="2021-07-21T15:33:39+08:00">2021-07-21</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-22 12:07:32" itemprop="dateModified" datetime="2021-07-22T12:07:32+08:00">2021-07-22</time>
+              </span>
 
           
             <span id="/2021/07/21/compound-protocol/" class="post-meta-item leancloud_visitors" data-flag-title="Compound 协议" title="阅读次数">
@@ -392,12 +553,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

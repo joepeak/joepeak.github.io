@@ -27,14 +27,17 @@
 <meta property="og:site_name" content="DeFi 研究社">
 <meta property="og:description" content="Compound 简介Compound 是一个去中心化的货币市场, 对标传统金融行业的产品就是余额宝了：你有一点闲钱，存进余额宝里能每天赚点利息；类似的当你有一点加密货币资产比如 BTC、ETH，放进通过 Compound 协议搭建的货币市场里就能币生币，从而保持资产增值。 现实世界中每一种资产都具有时间价值，通过利息这一强大工具，可以让放贷方、借款方达成跨期价值交换。 在加密货币市场上存在两个核">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://blockchain.szdyfjh.com/compound1.png">
+<meta property="og:image" content="http://blockchain.szdyfjh.com/compound3.png">
+<meta property="og:image" content="http://blockchain.szdyfjh.com/compound4.png">
+<meta property="og:image" content="http://blockchain.szdyfjh.com/compound5.png">
+<meta property="og:image" content="http://blockchain.szdyfjh.com/compound6.png">
 <meta property="article:published_time" content="2021-07-21T07:33:39.000Z">
-<meta property="article:modified_time" content="2021-07-21T10:27:26.065Z">
+<meta property="article:modified_time" content="2021-07-22T04:07:32.710Z">
 <meta property="article:author" content="乔疯">
 <meta property="article:tag" content="借贷">
 <meta property="article:tag" content="Compound">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://blockchain.szdyfjh.com/compound1.png">
+<meta name="twitter:image" content="http://blockchain.szdyfjh.com/compound3.png">
 
 <link rel="canonical" href="http://example.com/2021/07/21/compound-protocol/">
 
@@ -187,10 +190,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-07-21 15:33:39 / 修改时间：18:27:26" itemprop="dateCreated datePublished" datetime="2021-07-21T15:33:39+08:00">2021-07-21</time>
+              <time title="创建时间：2021-07-21 15:33:39" itemprop="dateCreated datePublished" datetime="2021-07-21T15:33:39+08:00">2021-07-21</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-22 12:07:32" itemprop="dateModified" datetime="2021-07-22T12:07:32+08:00">2021-07-22</time>
+              </span>
 
           
             <span id="/2021/07/21/compound-protocol/" class="post-meta-item leancloud_visitors" data-flag-title="Compound 协议" title="阅读次数">
@@ -266,7 +275,8 @@
 <script type="math/tex; mode=display">资产利用率 = \frac{totalBorrows}{(totalCash + totalBorrows – totalReserves)}</script><p>资产利用率公式中每部分的含义如上所述。</p>
 <p>通过上面的公式可以看出： 借款量越多，资产利用率也越高，这也和我们的实际经验相符合。</p>
 <h4 id="借款利率"><a href="#借款利率" class="headerlink" title="借款利率"></a>借款利率</h4><p>Compound借款利率有两个版本，1.0版本为线性利率模型，2.0版本为分段利率模型，1.0版本是2.0版本的特殊情况。 2.0版本的核心思路：如果使用率超过一定比例（kink），则使用分段利率，否则则采用1.0版本的利率模型。</p>
-<p>对于 2.0 的利率模型，可以称之为拐点型。</p>
+<p>对于 2.0 的利率模型，可以称之为拐点型，图形如下</p>
+<p><img src="http://blockchain.szdyfjh.com/compound3.png" alt=""></p>
 <p>如果资产利用率小于等于指定比例，则借款利率公式如下：</p>
 <script type="math/tex; mode=display">借款利率 = baseRate + utilizationRate * multiplier</script><p>如果资产利用率大于指定比例，则借款利率公式如下：</p>
 <script type="math/tex; mode=display">借款利率 = baseRate + utilizationRate*multiplier + (utilizationRate-kink) * jumpMultiplier</script><p>在上面的公式中：</p>
@@ -279,6 +289,9 @@
 </li>
 </ul>
 <p>对于 1.0 的利率模型，可以称之为直线型，就是资产利用率小于等于指定比例时的特殊情况。</p>
+<p>1.0 的利率模型图形如下</p>
+<p><img src="http://blockchain.szdyfjh.com/compound4.png" alt=""></p>
+<p>在上面的图形中，黑色线为横轴，表示利用率，紫色线表示借款利率，绿色线表示存款利率。</p>
 <h4 id="存款利率"><a href="#存款利率" class="headerlink" title="存款利率"></a>存款利率</h4><p>存款利率与借款利率和资产利用率都有关系，具体如下：</p>
 <script type="math/tex; mode=display">存款利率 = borrowRate * (1 – reserveFactor) * utilizationRate</script><p>在上面的公式中：</p>
 <ul>
@@ -289,9 +302,31 @@
 <li><p>utilizationRate，就是资产利用率</p>
 </li>
 </ul>
+<h4 id="利率更新周期"><a href="#利率更新周期" class="headerlink" title="利率更新周期"></a>利率更新周期</h4><p>在上面，我们提到了借款利率、存款利率，那么在 Compound 中利率多久改变一次呢？</p>
+<p>实际上，只要利用率一改变，Compound 的利率就会更新，利率更新的最小单位就是一个区块的时间。在以太坊网络上，平均 15秒就生成一个区块，因此利率变化的单位就是 15秒。</p>
 <h3 id="Compound-基本架构"><a href="#Compound-基本架构" class="headerlink" title="Compound 基本架构"></a>Compound 基本架构</h3><p>俗话说一图胜千言，我们使用下面的图为例来说明 Compound 的架构</p>
-<p><img src="http://blockchain.szdyfjh.com/compound1.png" alt=""></p>
-<p>在这篇文章中，我们以 DAI 来例来说明这个架构。首先，存款人即放贷人将一定量的 DAI 存入智能合约中，即可立即完成放贷从而产生利率，而借款人可以通过抵押一定量的标的资产（这里以 ETH 为例子）借出智能合约中的 DAI，并按照一定利率来支付利息。</p>
+<p><img src="http://blockchain.szdyfjh.com/compound5.png" alt=""></p>
+<p>下面，我们对上面的架构图进行一些说明：</p>
+<ol>
+<li><p>放贷人/借款人存入资产到 Compound 智能合约的货币市场。放贷人/借款人存入的资产为底层资产（也称为标的资产）。</p>
+</li>
+<li><p>智能合约按照兑换率发放对应底层资产的 Compound 代币 cTokens 到用户账户。这里的 cTokens 可以为 cDAI/cETH/cUSDC/cREP/cSAI/cWBTC/cBAT/cZRX 等。 </p>
+</li>
+<li><p>放贷人存入资产到 Compound 的货币市场中可以享受放贷利息收益，由 Compound 自动撮合贷款需求。</p>
+</li>
+<li><p>借款人超额抵押资产后，可以从货币市场借款。不同于P2P借款，借款人不需要和贷款人协商，只要对应货币市场的流动性足够，由 Compound 智能合约自动撮合。借款利率由 Compound 智能合约根据市场对资金的供需关系实时确定。同一区块内，所有借款人的借款利率都是相同的。</p>
+</li>
+<li><p>Compound 按照区块数为单位累积借款人利息。</p>
+</li>
+<li><p>Compound 对每一笔借款都会计提准备金。 </p>
+</li>
+<li><p>放贷人可以随时赎回自己存入的底层资产</p>
+</li>
+<li><p>借款人可以随时偿还贷款</p>
+</li>
+<li><p>如果借款人抵押资产价值低于清算阀值，Compound 智能合约会自动发起清算操作，以保证用户的资产总额大于借贷总额。</p>
+</li>
+</ol>
 <p>对于这个架构，我们需要知道的是：</p>
 <ol>
 <li><p>借款人可以抵押 Compound 支持的任何资产，但为了防止借款人付不出利息，借出的总资产必须小于抵押资产的一定数量。</p>
@@ -301,6 +336,8 @@
 <li><p>借款人可以随时还款，还款时依据借款利率与时间，决定总的还款数量。同样，放贷人可以随时连本带利提出 DAI，但前提是智能合约中必须有足够的 DAI，由于备用金机制，几乎不可能有提不出资产的情况。</p>
 </li>
 </ol>
+<p>Compound 核心特点，可以用下面的思维导图进行概括：</p>
+<p><img src="http://blockchain.szdyfjh.com/compound6.png" alt=""></p>
 
     </div>
 
@@ -323,7 +360,10 @@
     <a href="/2021/07/15/compound-whitepaper/" rel="prev" title="Compound 白皮书">
       <i class="fa fa-chevron-left"></i> Compound 白皮书
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/22/compound-sourcecode/" rel="next" title="Compound 源码解析">
+      Compound 源码解析 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -382,7 +422,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Compound-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">Compound 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compound-%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">Compound 模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text">核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%91%E6%8D%A2%E7%8E%87%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">2.1.1.</span> <span class="nav-text">兑换率的计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E4%BA%A7%E5%88%A9%E7%94%A8%E7%8E%87%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">2.1.2.</span> <span class="nav-text">资产利用率的计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%80%9F%E6%AC%BE%E5%88%A9%E7%8E%87"><span class="nav-number">2.1.3.</span> <span class="nav-text">借款利率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E6%AC%BE%E5%88%A9%E7%8E%87"><span class="nav-number">2.1.4.</span> <span class="nav-text">存款利率</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compound-%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">Compound 基本架构</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Compound-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">Compound 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compound-%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">Compound 模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text">核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%91%E6%8D%A2%E7%8E%87%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">2.1.1.</span> <span class="nav-text">兑换率的计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E4%BA%A7%E5%88%A9%E7%94%A8%E7%8E%87%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">2.1.2.</span> <span class="nav-text">资产利用率的计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%80%9F%E6%AC%BE%E5%88%A9%E7%8E%87"><span class="nav-number">2.1.3.</span> <span class="nav-text">借款利率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E6%AC%BE%E5%88%A9%E7%8E%87"><span class="nav-number">2.1.4.</span> <span class="nav-text">存款利率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A9%E7%8E%87%E6%9B%B4%E6%96%B0%E5%91%A8%E6%9C%9F"><span class="nav-number">2.1.5.</span> <span class="nav-text">利率更新周期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compound-%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">Compound 基本架构</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -396,12 +436,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

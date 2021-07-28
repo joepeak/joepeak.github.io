@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="通过前两篇文章，我们对 Compound 已经有了相当的了解。作为一个完整的借贷项目，Compound 涉及到非常多的内容，但是对于区块链项目来说，智能是其灵魂所在，今天这篇文章我们就从合约的角度来分析下 Compound。 闲话少说，进入正题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Compound 源码解析">
+<meta property="og:url" content="http://example.com/2021/07/22/compound-sourcecode/index.html">
+<meta property="og:site_name" content="DeFi 研究社">
+<meta property="og:description" content="通过前两篇文章，我们对 Compound 已经有了相当的了解。作为一个完整的借贷项目，Compound 涉及到非常多的内容，但是对于区块链项目来说，智能是其灵魂所在，今天这篇文章我们就从合约的角度来分析下 Compound。 闲话少说，进入正题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blockchain.szdyfjh.com/proxy-contract.png">
+<meta property="article:published_time" content="2021-07-22T06:13:13.000Z">
+<meta property="article:modified_time" content="2021-07-28T10:49:16.491Z">
+<meta property="article:author" content="乔疯">
+<meta property="article:tag" content="借贷">
+<meta property="article:tag" content="Compound">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blockchain.szdyfjh.com/proxy-contract.png">
+
+<link rel="canonical" href="http://example.com/2021/07/22/compound-sourcecode/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Compound 源码解析 | DeFi 研究社</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c32d00f7caa52aab5fd1275f3c12ee92";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">DeFi 研究社</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/22/compound-sourcecode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="乔疯">
+      <meta itemprop="description" content="DeFi，区块链的大海星辰">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DeFi 研究社">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Compound 源码解析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-22 14:13:13" itemprop="dateCreated datePublished" datetime="2021-07-22T14:13:13+08:00">2021-07-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-28 18:49:16" itemprop="dateModified" datetime="2021-07-28T18:49:16+08:00">2021-07-28</time>
+              </span>
+
+          
+            <span id="/2021/07/22/compound-sourcecode/" class="post-meta-item leancloud_visitors" data-flag-title="Compound 源码解析" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>通过前两篇文章，我们对 Compound 已经有了相当的了解。作为一个完整的借贷项目，Compound 涉及到非常多的内容，但是对于区块链项目来说，智能是其灵魂所在，今天这篇文章我们就从合约的角度来分析下 Compound。 闲话少说，进入正题。</p>
+<span id="more"></span>
+<h2 id="Compound-合约简介"><a href="#Compound-合约简介" class="headerlink" title="Compound 合约简介"></a>Compound 合约简介</h2><p><a target="_blank" rel="noopener" href="https://github.com/compound-finance/compound-protocol">Compound 合约</a> 源代码是公开的，每个人都可以去下载、运行。我们可以看到 Compound 源代码还是比较多的，这里我们首先介绍一些比较核心的合约：</p>
+<ul>
+<li><p>CToken, CErc20 和 CEther</p>
+<p>Compound cTokens 是一个自包含的借贷合约。CToken 包含核心逻辑，CErc20 和 CEther 分别为 Erc20 Token 和以太坊添加了公共接口。每个 CToken 都被分配一个利率和风险模型(见 <code>InterestRateModel</code> 和 <code>Comptroller</code> 部分)，并允许账户铸造(供应资本)、赎回(撤回资本)、借入和偿还借款。每个 CToken 都是符合 ERC-20 标准的 token，其中余额代表市场所有权。</p>
+</li>
+<li><p>审计</p>
+<p>风险模型契约，它验证允许的用户操作，如果操作不符合特定的风险参数，则禁止操作。例如，<code>Comptroller</code> 强制每个借贷用户必须在所有ctoken 上保持足够的担保余额。</p>
+</li>
+<li><p>复合治理令牌</p>
+<p>复合治理令牌(COMP) 是 Compound Governance Token 的缩写。该代币的持有者有能力通过 governor 合约来管理协议。</p>
+</li>
+<li><p>Governor Alpha</p>
+<p>Compound 时间锁合约的管理员。Comp 代币持有人可以创建提案并对提案进行投票，提案将排队进入 Compound 时间锁，然后对 Compound cToken 和 Comptroller 合约产生影响。这个合同将来可能会被测试版所取代。</p>
+</li>
+<li><p>InterestRateModel</p>
+<p>定义利率模型的合约。这些模型根据给定市场的当前利用情况(即，相对于借入的资产，有多少是流动性的)，用算法来确定利率。</p>
+</li>
+<li><p>安全数学</p>
+<p>安全的数学操作库。</p>
+</li>
+<li><p>ErrorReporter</p>
+<p>跟踪错误代码和故障条件的库。</p>
+</li>
+<li><p>指数</p>
+<p>处理定点十进制数的库。</p>
+</li>
+<li><p>SafeToken</p>
+<p>安全处理 Erc20 交互的库。</p>
+</li>
+<li><p>WhitePaperInterestRateModel</p>
+<p>初始利率模型，如白皮书中所定义。该合约在其构造函数中接受一个基本利率和斜率参数。</p>
+</li>
+</ul>
+<h2 id="CToken-CErc20-和-CEther"><a href="#CToken-CErc20-和-CEther" class="headerlink" title="CToken, CErc20 和 CEther"></a>CToken, CErc20 和 CEther</h2><p>作为 Compound 合约的核心，我们首先来看下这几个合约。</p>
+<p><code>CToken</code> 主要继承自 <code>CTokenInterface</code> 这个合约，当然它也同时继承了 <code>Exponential</code>、<code>TokenErrorReporter</code> 这两个合约，后两个合约分别用来处理定点十进制数和错误报告相关，这里我们就不细讲。</p>
+<p><code>CTokenInterface</code> 合约本质上是一个抽象合约，只是由于定义了一个常量所以才没有声明为抽象合约。这个合约声明了货币市场的事件、管理事件、用户操作、管理员操作</p>
+<p><code>CTokenInterface</code> 合约继承自 <code>CTokenStorage</code> 合约，后者定于了大量的状态变量。<code>CTokenInterface</code> 和 <code>CTokenStorage</code> 两个合约一个定义了主要操作，一个定义了主要的状态，实现了数据与逻辑的分离，从而可以保证 CToken 合约可升级。当使用代理合约模式后，用户对目标合约的所有调用都通过代理合约，代理合约会将调用请求重定向到目标合约中。具体调用处理如下图：</p>
+<p><img src="http://blockchain.szdyfjh.com/proxy-contract.png" alt="代理合约"></p>
+<p><code>CToken</code> 是一个抽象的基础合约，没有构造函数，所以不能被部署，只能被别的合约继承，继承这个合约的正是 <code>CErc20</code> 和 <code>CEther</code>。其中，<code>CEther</code> 用来以太坊代币，它有构造函数，所以可以被部署在链上，正是用户交互的入口合约之一，而 <code>CErc20</code> 用来处理基于 ERC20 标准的其他代币，但是这个合约没有提供构造函数，只有一个初始化函数，说明它是不可以被部署的。</p>
+<p>那么如何部署 <code>CErc20</code> 合约呢，答案正是代理模式。通过浏览代码，我们可以看到与 <code>CErc20</code> 相关的合约还有两个，分别是 <code>CErc20Delegate</code> 和 <code>CErc20Delegator</code>。<code>CErc20Delegator</code> 对应于图中的 Proxy Contract，而 <code>CErc20Delegate</code> 则对应于 Logic Contract，这两个合约都是可以部署的，<code>CErc20Delegator</code> 也是用户交互的另一个入口合约。</p>
+<h3 id="以太坊货币市场"><a href="#以太坊货币市场" class="headerlink" title="以太坊货币市场"></a>以太坊货币市场</h3><h4 id="构造-ETH-货币市场"><a href="#构造-ETH-货币市场" class="headerlink" title="构造 ETH 货币市场"></a>构造 ETH 货币市场</h4><p>如上所述，ETH 的 cToken 交互入口是 <code>CEther</code> 合约，它的构造方法如下：</p>
+<pre><code>constructor(ComptrollerInterface comptroller_,
+            InterestRateModel interestRateModel_,
+            uint initialExchangeRateMantissa_,
+            string memory name_,
+            string memory symbol_,
+            uint8 decimals_,
+            address payable admin_) public &#123;
+
+    admin = msg.sender;
+    initialize(comptroller_, interestRateModel_, initialExchangeRateMantissa_, name_, symbol_, decimals_);
+    admin = admin_;
+&#125;
+</code></pre><p>这段代码非常简单，首先设置管理员地址为当前合约调用者即部署者地址，然后调用父合约的 <code>initialize</code> 函数进行初始化，最后初始完成后，重新设置管理员地址为参数指定的地址。</p>
+<p>初始化函数 <code>initialize</code> 流程如下：</p>
+<ol>
+<li><p>检查函数调用查为管理员地址，否则抛出异常。</p>
+<pre><code>require(msg.sender == admin, &quot;only admin may initialize the market&quot;);
+</code></pre></li>
+<li><p>检查两个变量是否为0，如果不是则抛出异常。这一步主要是为了确保只初始化一次。</p>
+<pre><code>require(accrualBlockNumber == 0 &amp;&amp; borrowIndex == 0, &quot;market may only be initialized once&quot;);
+</code></pre></li>
+<li><p>设置初始的兑换率为参数指定的值，并进行检查以确保大于0。</p>
+<pre><code>initialExchangeRateMantissa = initialExchangeRateMantissa_;
+require(initialExchangeRateMantissa &gt; 0, &quot;initial exchange rate must be greater than zero.&quot;);
+</code></pre></li>
+<li><p>调用 <code>_setComptroller</code> 函数，设置审计合约地址。</p>
+<pre><code>uint err = _setComptroller(comptroller_);
+require(err == uint(Error.NO_ERROR), &quot;setting comptroller failed&quot;);
+</code></pre><p><code>_setComptroller</code> 函数首先检查调用者为管理员，然后保存当前审核合约地址到一个临时变量中，并检查新的地址为审计合约，然后保存新的审计合约到审计合约状态变量中，最后发射 <code>NewComptroller</code> 事件。</p>
+</li>
+<li><p>初始化应计息区块号和 borrow index</p>
+<pre><code>accrualBlockNumber = getBlockNumber();
+borrowIndex = mantissaOne;
+</code></pre><p><code>getBlockNumber</code> 函数直接调用 <code>block.number</code> 返回当前的区块号码，<code>mantissaOne</code> 为一个 <code>1e18</code> 常量。</p>
+</li>
+<li><p>设置利率模型。</p>
+<pre><code>err = _setInterestRateModelFresh(interestRateModel_);
+require(err == uint(Error.NO_ERROR), &quot;setting interest rate model failed&quot;);
+</code></pre><p><code>_setInterestRateModelFresh</code> 函数首先检查调用者为管理员，应计息区块号和当前区块号相同（确保是在同一个区块内进行设置的），然后保存当前利率模型合约地址到一个临时变量中，并检查新的地址为利率模型合约，然后保存新的利率模型合约到利率模型合约状态变量中，最后发射 <code>NewMarketInterestRateModel</code> 事件。</p>
+</li>
+<li><p>最后，设置新 Token 的名称、符号、小数位等。</p>
+<pre><code>name = name_;
+symbol = symbol_;
+decimals = decimals_;
+
+_notEntered = true;
+</code></pre><p>在 Compound 货币市场中，为每个支持的代币都会生成一个新的 <code>cToken</code>，这个新的 <code>cToken</code> 是一个兼容的 ERC20 代币，所以也会有名称、符号、小数位等。</p>
+</li>
+</ol>
+<h4 id="存款-mint"><a href="#存款-mint" class="headerlink" title="存款 mint"></a>存款 <code>mint</code></h4><p>存款函数会新增 cToken 数量，即 totalSupply 增加了，就等于挖矿了 cToken。该操作会同时将用户的标的资产转入 cToken 合约中（数据会存储在代理合约中），并根据最新的兑换率将对应的 cToken 代币转到用户钱包地址。</p>
+<p><code>CEther</code> 的存储函数非常简单，简单到只有一行代码，代码如下：</p>
+<pre><code>(uint err,) = mintInternal(msg.value);
+</code></pre><p>因为存款函数是直接调用父函数的 <code>mintInternal</code> 函数，那我们就进入这个函数一看究竟。</p>
+<p><code>mintInternal</code> 函数执行流程如下：</p>
+<ol>
+<li><p>调用 <code>accrueInterest</code> 函数计算利息。如果出现在错误，则抛出异常。异常这里我们就不细说。</p>
+<pre><code>uint error = accrueInterest();
+</code></pre><p><code>accrueInterest</code> 函数流程如下：</p>
+<ul>
+<li><p>获取当前区块号和前一次调用时的区块号</p>
+<pre><code>uint currentBlockNumber = getBlockNumber();
+uint accrualBlockNumberPrior = accrualBlockNumber;
+</code></pre></li>
+<li><p>如果当前区块号和前一次调用时的区块号一样，表示当前区块已经计算过利息，无需再计算，直接返回。</p>
+<pre><code>if (accrualBlockNumberPrior == currentBlockNumber) &#123;
+    return uint(Error.NO_ERROR);
+&#125;
+</code></pre></li>
+<li><p>获取资金池余额、总借款、总储备金、借款指数。</p>
+<pre><code>uint cashPrior = getCashPrior();
+uint borrowsPrior = totalBorrows;
+uint reservesPrior = totalReserves;
+uint borrowIndexPrior = borrowIndex;
+</code></pre></li>
+<li><p>调用利率模型合约的 <code>getBorrowRate</code> 方法，获取当前的借款利率。</p>
+<pre><code>uint borrowRateMantissa = interestRateModel.getBorrowRate(cashPrior, borrowsPrior, reservesPrior);
+</code></pre></li>
+<li><p>如果当前借款利率超过最大的借款利率，则抛出异常。</p>
+<pre><code>require(borrowRateMantissa &lt;= borrowRateMaxMantissa, &quot;borrow rate is absurdly high&quot;);
+</code></pre><p>最大的借款利率当前设置为 <code>0.0005e16</code>，即每区块 0.0005%</p>
+</li>
+<li><p>计算从上次计算之后到当前经过的区块数量。该区块数量表示还未计算利息的区块区间。</p>
+<pre><code>(MathError mathErr, uint blockDelta) = subUInt(currentBlockNumber, accrualBlockNumberPrior);
+</code></pre></li>
+<li><p>计算利息因子。利息因子 = 当前借款利率 * 累计未计算区块间隔。</p>
+<pre><code>(mathErr, simpleInterestFactor) = mulScalar(Exp(&#123;mantissa: borrowRateMantissa&#125;), blockDelta);
+</code></pre></li>
+<li><p>计算应计利息。应计利息 = 利息因子 * 当前借款总额。</p>
+<pre><code>(mathErr, interestAccumulated) = mulScalarTruncate(simpleInterestFactor, borrowsPrior);
+</code></pre></li>
+<li><p>计算借款总额。借款总额 = 应计利息 + 当前借款总额</p>
+<pre><code>(mathErr, totalBorrowsNew) = addUInt(interestAccumulated, borrowsPrior);
+</code></pre></li>
+<li><p>计算储备金总额。储备金总额 = 储备因子 * 应计利息 + 当前的储备金总额。</p>
+<pre><code>(mathErr, totalReservesNew) = mulScalarTruncateAddUInt(Exp(&#123;mantissa: reserveFactorMantissa&#125;), interestAccumulated, reservesPrior);
+</code></pre></li>
+<li><p>计算借款指数。借款指数 = 利息因子 * 当前借款指数 + 当前借款指数.</p>
+<pre><code>(mathErr, borrowIndexNew) = mulScalarTruncateAddUInt(simpleInterestFactor, borrowIndexPrior, borrowIndexPrior);
+</code></pre></li>
+<li><p>更新当前区块高度、借款指数、借款总额、储备金总额。</p>
+<pre><code>accrualBlockNumber = currentBlockNumber;
+borrowIndex = borrowIndexNew;
+totalBorrows = totalBorrowsNew;
+totalReserves = totalReservesNew;
+</code></pre></li>
+<li><p>发射利息事件。</p>
+<pre><code>AccrueInterest
+</code></pre></li>
+</ul>
+</li>
+<li><p>触发相应的事件。</p>
+<pre><code>return mintFresh(msg.sender, mintAmount);
+</code></pre><p><code>mintFresh</code> 函数执行流程如下：</p>
+<ul>
+<li><p>调用审计合约的 <code>mintAllowed</code> 方法，检查是否允许当前地址存入指定数量的 ETH。如果不允许，则抛出异常。</p>
+<pre><code>uint allowed = comptroller.mintAllowed(address(this), minter, mintAmount);
+</code></pre></li>
+<li><p>验证当前区块高度是否等于市场保存的区块高度。如果不一致则抛出异常。</p>
+<pre><code>if (accrualBlockNumber != getBlockNumber()) &#123;
+    return (fail(Error.MARKET_NOT_FRESH, FailureInfo.MINT_FRESHNESS_CHECK), 0);
+&#125;
+</code></pre></li>
+<li><p>计算当前的兑换率。</p>
+<pre><code>MintLocalVars memory vars;
+(vars.mathErr, vars.exchangeRateMantissa) = exchangeRateStoredInternal();
+</code></pre><p><code>exchangeRateStoredInternal</code> 函数，首先检查当前总的供给量是否为0，如果是返回初始的兑换率，否则使用 <code>(totalCash + totalBorrows - totalReserves) / totalSupply</code> 计算新的的兑换率。</p>
+</li>
+<li><p>计算发起者实际转入到合约中的 Token 数量。</p>
+<pre><code>vars.actualMintAmount = doTransferIn(minter, mintAmount);
+</code></pre><p>对于当前情况，即底层资产为 ETH，实际输入的数量为 100%，即输入的数量为 <code>mintAmount</code>。</p>
+</li>
+<li><p>计算需要铸造的 cToken 数量。</p>
+<pre><code>(vars.mathErr, vars.mintTokens) = divScalarByExpTruncate(vars.actualMintAmount, Exp(&#123;mantissa: vars.exchangeRateMantissa&#125;));
+</code></pre><p>铸造的 cToken 数量等于真实输入到合约中的 Token 数量除以兑换率，公式如下：<code>mintTokens = actualMintAmount / exchangeRate</code>。</p>
+</li>
+<li><p>把铸造出来的 cToken 数量加入到总供给中。</p>
+<pre><code>(vars.mathErr, vars.totalSupplyNew) = addUInt(totalSupply, vars.mintTokens);
+</code></pre></li>
+<li><p>把铸造出来的 cToken 数量加入到用户对应的账户中。</p>
+<pre><code>(vars.mathErr, vars.accountTokensNew) = addUInt(accountTokens[minter], vars.mintTokens);
+</code></pre></li>
+<li><p>更新合约的总供给量和用户对应的数量。</p>
+<pre><code>totalSupply = vars.totalSupplyNew;
+accountTokens[minter] = vars.accountTokensNew;
+</code></pre></li>
+<li><p>发射铸造事件和转账事件。</p>
+<pre><code>emit Mint(minter, vars.actualMintAmount, vars.mintTokens);
+emit Transfer(address(this), minter, vars.mintTokens);
+</code></pre></li>
+</ul>
+</li>
+</ol>
+<h4 id="赎回存款-redeem"><a href="#赎回存款-redeem" class="headerlink" title="赎回存款 redeem"></a>赎回存款 <code>redeem</code></h4><p>赎回存款函数同样只有一行调用父合约的代码：</p>
+<pre><code>return redeemInternal(redeemTokens);
+</code></pre><p><code>redeemInternal</code> 函数执行如下：</p>
+<ol>
+<li><p>调用 <code>accrueInterest</code> 函数计算利息。如果出现在错误，则抛出异常。异常这里我们就不细说。</p>
+<pre><code> uint error = accrueInterest();
+</code></pre><p><code>accrueInterest</code> 这个函数前面已经过分析过，这里略过。</p>
+</li>
+<li><p>调用 <code>redeemFresh</code> 函数，赎回存款。</p>
+<pre><code>return redeemFresh(msg.sender, redeemTokens, 0);
+</code></pre><p><code>redeemFresh</code> 函数流程如下：</p>
+<ul>
+<li><p>检查赎回的 Token 数量或购回的底层资产数量是否为0。如果是，则抛出异常。</p>
+<pre><code>require(redeemTokensIn == 0 || redeemAmountIn == 0, &quot;one of redeemTokensIn or redeemAmountIn must be zero&quot;);
+</code></pre></li>
+<li><p>计算当前的兑换率。</p>
+<pre><code>RedeemLocalVars memory vars;
+(vars.mathErr, vars.exchangeRateMantissa) = exchangeRateStoredInternal();
+</code></pre><p><code>exchangeRateStoredInternal</code> 函数前面已经解释过，这里略过不提。</p>
+</li>
+<li><p>如果赎回的 Token 数量大于0，则计算对应的 cToken 数量。</p>
+<pre><code>vars.redeemTokens = redeemTokensIn;
+(vars.mathErr, vars.redeemAmount) = mulScalarTruncate(Exp(&#123;mantissa: vars.exchangeRateMantissa&#125;), redeemTokensIn);
+</code></pre><p>具体计算公式等于 <code>redeemTokensIn x exchangeRateCurrent</code></p>
+</li>
+<li><p>如果赎回的底层资产数量大于0，则计算对应的 cToken 数量。</p>
+<pre><code>(vars.mathErr, vars.redeemTokens) = divScalarByExpTruncate(redeemAmountIn, Exp(&#123;mantissa: vars.exchangeRateMantissa&#125;));
+
+vars.redeemAmount = redeemAmountIn;
+</code></pre><p>具体计算公式等于 <code>redeemAmountIn / exchangeRateCurrent</code></p>
+</li>
+<li><p>调用审计合约的 <code>redeemAllowed</code> 方法，检查是否允许赎回存款。如果不允许则抛出异常。</p>
+<pre><code>uint allowed = comptroller.redeemAllowed(address(this), redeemer, vars.redeemTokens);
+</code></pre></li>
+<li><p>验证当前区块高度是否等于市场保存的区块高度。如果不一致则抛出异常。</p>
+</li>
+<li><p>计算用户赎回存款之后，新的供给总量和用户新的余额。</p>
+<pre><code>(vars.mathErr, vars.totalSupplyNew) = subUInt(totalSupply, vars.redeemTokens);
+(vars.mathErr, vars.accountTokensNew) = subUInt(accountTokens[redeemer], vars.redeemTokens);
+</code></pre></li>
+<li><p>如果用户赎回的数量大于当前合约的现金，则抛出异常。因为合约没有足够的资产可供用户赎回。</p>
+<pre><code>if (getCashPrior() &lt; vars.redeemAmount) &#123;
+    return fail(Error.TOKEN_INSUFFICIENT_CASH, FailureInfo.REDEEM_TRANSFER_OUT_NOT_POSSIBLE);
+&#125;
+</code></pre></li>
+<li><p>从合约中转出指定数量的资产到用户地址。</p>
+<pre><code>doTransferOut(redeemer, vars.redeemAmount);
+</code></pre></li>
+<li><p>更新合约的总供给量和用户对应的数量。</p>
+<pre><code>totalSupply = vars.totalSupplyNew;
+accountTokens[redeemer] = vars.accountTokensNew;
+</code></pre></li>
+<li><p>发射转账事件和赎回事件。</p>
+<pre><code>emit Transfer(redeemer, address(this), vars.redeemTokens);
+emit Redeem(redeemer, vars.redeemAmount, vars.redeemTokens);
+</code></pre></li>
+<li><p>调用审计合约的 <code>redeemVerify</code> 方法进行后续处理。</p>
+<pre><code>comptroller.redeemVerify(address(this), redeemer, vars.redeemAmount, vars.redeemTokens);
+</code></pre></li>
+</ul>
+</li>
+</ol>
+<p>除了上面这种赎回方式，Compound 还支持指定赎回指定数量的底层资产的方式，两种方式在代码层面只有稍微不同，读者可以自行进行分析。</p>
+<h4 id="借款-borrow"><a href="#借款-borrow" class="headerlink" title="借款 borrow"></a>借款 <code>borrow</code></h4><p>借款函数也只有一行代码：</p>
+<pre><code>return borrowInternal(borrowAmount);
+</code></pre><p><code>borrowInternal</code> 函数定义在父合约中，它的执行如下：</p>
+<ol>
+<li><p>同样是，调用 <code>accrueInterest</code> 函数计算利息。如果出现在错误，则抛出异常。异常这里我们就不细说。</p>
+<pre><code>uint error = accrueInterest();
+</code></pre></li>
+</ol>
+<p><code>accrueInterest</code> 这个函数前面已经过分析过，这里略过。</p>
+<ol>
+<li><p>调用 <code>borrowFresh</code> 函数，进行贷款处理。</p>
+<p><code>borrowFresh</code> 函数内容如下：</p>
+<ul>
+<li><p>调用审计合约的 <code>borrowAllowed</code> 方法，检查是否允许调用查贷款指定数量。如果不允许，则抛出异常。</p>
+<pre><code>uint allowed = comptroller.borrowAllowed(address(this), borrower, borrowAmount);
+</code></pre></li>
+<li><p>验证当前区块高度是否等于市场保存的区块高度。如果不一致则抛出异常。</p>
+</li>
+<li><p>检查借款数量是否大于合约中的现金。如果是则抛出异常。</p>
+<pre><code>if (getCashPrior() &lt; borrowAmount) &#123;
+    return fail(Error.TOKEN_INSUFFICIENT_CASH, FailureInfo.BORROW_CASH_NOT_AVAILABLE);
+&#125;
+</code></pre></li>
+<li><p>计算账户借款总额。</p>
+<pre><code>BorrowLocalVars memory vars;
+(vars.mathErr, vars.accountBorrows) = borrowBalanceStoredInternal(borrower);
+</code></pre><p><code>borrowBalanceStoredInternal</code> 函数返回几遍的贷款总额，具体流程如下：</p>
+<ul>
+<li><p>获取包含账户借款余额和借款指数信息的借款快照。</p>
+<pre><code>BorrowSnapshot storage borrowSnapshot = accountBorrows[account];
+</code></pre></li>
+<li><p>如果用户已借款数量为0，则立即返回。</p>
+<pre><code>if (borrowSnapshot.principal == 0) &#123;
+    return (MathError.NO_ERROR, 0);
+&#125;
+</code></pre></li>
+<li><p>计算用户最新的借款金额，并返回借款余额。</p>
+<pre><code>(mathErr, principalTimesIndex) = mulUInt(borrowSnapshot.principal, borrowIndex);
+(mathErr, result) = divUInt(principalTimesIndex, borrowSnapshot.interestIndex);
+return (MathError.NO_ERROR, result);
+</code></pre><p>用户最新的借款金额等于 <code>用户的借款金额 * 市场借款指数 / 用户的借款指数</code></p>
+</li>
+</ul>
+</li>
+<li><p>计算用户新的借款金额和市场总的贷款金额，包括当前这一次借款金额。</p>
+<pre><code>(vars.mathErr, vars.accountBorrowsNew) = addUInt(vars.accountBorrows, borrowAmount);
+(vars.mathErr, vars.totalBorrowsNew) = addUInt(totalBorrows, borrowAmount);
+</code></pre></li>
+<li><p>从货币市场转入指定金额到用户地址。</p>
+<pre><code>doTransferOut(borrower, borrowAmount);
+</code></pre></li>
+<li><p>更新用户的借款金额和借款指数以及市场总的借款金额。</p>
+<pre><code>accountBorrows[borrower].principal = vars.accountBorrowsNew;
+accountBorrows[borrower].interestIndex = borrowIndex;
+totalBorrows = vars.totalBorrowsNew;
+</code></pre></li>
+<li><p>发射借款事件。</p>
+<pre><code>emit Borrow(borrower, borrowAmount, vars.accountBorrowsNew, vars.totalBorrowsNew);
+</code></pre></li>
+</ul>
+</li>
+</ol>
+<h4 id="还款-repayBorrow"><a href="#还款-repayBorrow" class="headerlink" title="还款 repayBorrow"></a>还款 <code>repayBorrow</code></h4><p>还款函数也是直接调用父合约的 <code>repayBorrowInternal</code> 方法进行还款，这个函数也比较简单，代码如下：</p>
+<pre><code>uint error = accrueInterest();
+
+return repayBorrowFresh(msg.sender, msg.sender, repayAmount);
+</code></pre><p><code>accrueInterest</code> 函数我们已经见过很多次，不用管，重点看下 <code>repayBorrowFresh</code> 函数，它的流程如下：</p>
+<ol>
+<li><p>调用审计合约的 <code>repayBorrowAllowed</code> 方法，检查用户是否被允许还款。如果不允许则抛出异常。</p>
+<pre><code>uint allowed = comptroller.repayBorrowAllowed(address(this), payer, borrower, repayAmount);
+</code></pre></li>
+<li><p>验证当前区块高度是否等于市场保存的区块高度。如果不一致则抛出异常。</p>
+</li>
+<li><p>获取用户的借款指数。</p>
+<pre><code>RepayBorrowLocalVars memory vars;
+vars.borrowerIndex = accountBorrows[borrower].interestIndex;
+</code></pre></li>
+<li><p>计算用户的借款金额，包括利息。</p>
+<pre><code>(vars.mathErr, vars.accountBorrows) = borrowBalanceStoredInternal(borrower);
+</code></pre><p><code>borrowBalanceStoredInternal</code> 函数前面已经分析，这里不讲。</p>
+</li>
+<li><p>如果还款参数为-1，则还款全部借款，否则偿还部分金额。</p>
+<pre><code>if (repayAmount == uint(-1)) &#123;
+    vars.repayAmount = vars.accountBorrows;
+&#125; else &#123;
+    vars.repayAmount = repayAmount;
+&#125;
+</code></pre></li>
+<li><p>从还款地址中转入指定金额到货币市场。</p>
+<pre><code>vars.actualRepayAmount = doTransferIn(payer, vars.repayAmount);
+</code></pre></li>
+<li><p>计算用户新的借款金额和市场总的借款金额。</p>
+<pre><code>(vars.mathErr, vars.accountBorrowsNew) = subUInt(vars.accountBorrows, vars.actualRepayAmount);
+(vars.mathErr, vars.totalBorrowsNew) = subUInt(totalBorrows, vars.actualRepayAmount);
+</code></pre></li>
+<li><p>更新用户的借款金额和借款指数以及市场总的借款金额。</p>
+<pre><code>accountBorrows[borrower].principal = vars.accountBorrowsNew;
+accountBorrows[borrower].interestIndex = borrowIndex;
+totalBorrows = vars.totalBorrowsNew;
+</code></pre></li>
+<li><p>发射还款事件。</p>
+<pre><code>emit RepayBorrow(payer, borrower, vars.actualRepayAmount, vars.accountBorrowsNew, vars.totalBorrowsNew);
+</code></pre></li>
+</ol>
+<p>在 Compound 中，除了直接还款外，还有一个代还款函数，即调用者帮借款人还款，这个函数就是 <code>repayBorrowBehalf</code>，有兴趣的朋友可以自己看。</p>
+<p>除了上面这些功能，Compound 货币市场还提供了清算功能，具体是由 <code>liquidateBorrow</code> 函数实现的，限于篇幅限制，这个函数就留给读者自己分析。</p>
+<h3 id="ERC20-货币市场"><a href="#ERC20-货币市场" class="headerlink" title="ERC20 货币市场"></a>ERC20 货币市场</h3><p>在以太坊区块链中，除了原生代币以太坊外，最常见的就是基于 ERC20 规则的代币，这些代币在 Compound 货币市场中，通过 <code>CErc20</code> 合约来进行支持。Coumpound 会为每个 ERC20 代币部署一个货币市场，同时会生成相应的 cToken，比如 DAI 对应的 cToken 就叫 cDAI。</p>
+<p>正如我们前面所说的那样，ERC20 货币市场采用的是代理模式，以此方便某个 ERC20 代币的升级。代理模式以后再分析，这里我们只看底层的 <code>CErc20</code> 合约。</p>
+<p>它的初始化函数如下：</p>
+<pre><code>function initialize(address underlying_,
+                    ComptrollerInterface comptroller_,
+                    InterestRateModel interestRateModel_,
+                    uint initialExchangeRateMantissa_,
+                    string memory name_,
+                    string memory symbol_,
+                    uint8 decimals_) public &#123;
+    // CToken initialize does the bulk of the work
+    super.initialize(comptroller_, interestRateModel_, initialExchangeRateMantissa_, name_, symbol_, decimals_);
+
+    // Set underlying and sanity check it
+    underlying = underlying_;
+    EIP20Interface(underlying).totalSupply();
+&#125;
+</code></pre><p>初始化函数首先调用父合约的初始化函数进行初始化设置，然后保存对应的底层基础代币，最后实例这个底层代币，并获取它的余额来检查底层代币是否OK。</p>
+<p>接下来照例是一些用户接口函数，因为这些函数也是调用父合约的函数，所以这次我们就不一一展示这些函数了。</p>
+<h2 id="利率合约"><a href="#利率合约" class="headerlink" title="利率合约"></a>利率合约</h2><p>看完了，cToken 合约，接下来我们就来看下利率相关的合约。</p>
+<p>Compound 中利率模型定义在抽象合约 <code>InterestRateModel</code> 中，这个合约因为是抽象合约，所以非常的简单，只定义了2个函数和一个常量，具体的代码如下：</p>
+<pre><code>contract InterestRateModel &#123;
+
+    bool public constant isInterestRateModel = true;
+
+    function getBorrowRate(uint cash, uint borrows, uint reserves) external view returns (uint);
+
+    function getSupplyRate(uint cash, uint borrows, uint reserves, uint reserveFactorMantissa) external view returns (uint);
+
+&#125;
+</code></pre><p><code>getBorrowRate</code> 函数用于计算每个区块的当前借款利率，<code>getSupplyRate</code> 函数用于计算每个区块的当前存储利率。</p>
+<p>因为 <code>InterestRateModel</code> 是抽象合约，针对不同的利率实现分散在不同的具体合约中，下面我们就来看这些具体利率模型。</p>
+<h3 id="直线型利率模型"><a href="#直线型利率模型" class="headerlink" title="直线型利率模型"></a>直线型利率模型</h3><p><code>WhitePaperInterestRateModel</code> 是一种最简单的利率模型，这种模型其实就是一种直线，可以称为直线型利率模型。这种模型用数学公式表示就是</p>
+<pre><code>y = k*x + b
+</code></pre><p>其中，k 为斜率，b 是 x 为 0 时的起点值，x 是自变量，在这里表示资金利用率，y 是因变量，表示借款利率。</p>
+<p>我们首先就来看这种利率模型。</p>
+<h4 id="构造利率模型"><a href="#构造利率模型" class="headerlink" title="构造利率模型"></a>构造利率模型</h4><p><code>WhitePaperInterestRateModel</code> 这种利率在构造时候要指定基础的年化利率和利率的增长速度。</p>
+<p>构造函数的具体代码如下：</p>
+<pre><code>constructor(uint baseRatePerYear, uint multiplierPerYear) public &#123;
+    baseRatePerBlock = baseRatePerYear.div(blocksPerYear);
+    multiplierPerBlock = multiplierPerYear.div(blocksPerYear);
+
+    emit NewInterestParams(baseRatePerBlock, multiplierPerBlock);
+&#125;
+</code></pre><p>在上面的参数中：</p>
+<ul>
+<li><p><code>baseRatePerYear</code> 表示基础的年化利率，对应的 <code>baseRatePerBlock</code> 表示区块级利率，对应公式中的截矩 <code>b</code>。</p>
+</li>
+<li><p><code>multiplierPerYear</code> 表示利率的增长速度，对应的 <code>multiplierPerBlock</code> 表示利率的增长速度，也就是公式中的斜率 <code>k</code></p>
+</li>
+</ul>
+<p>基础的年化利率和利率的增长速度除以每年的区块数量得到区块级的利率和区块级的利率增长速度。</p>
+<h4 id="利用率"><a href="#利用率" class="headerlink" title="利用率"></a>利用率</h4><p>因为存储利率和贷款利率都要用到利用率，所以我们就先看下利用率这个函数。这个函数代码如下：</p>
+<pre><code>function utilizationRate(uint cash, uint borrows, uint reserves) public pure returns (uint) &#123;
+    if (borrows == 0) &#123;
+        return 0;
+    &#125;
+
+    return borrows.mul(1e18).div(cash.add(borrows).sub(reserves));
+&#125;
+</code></pre><p>如代码所示，如果借款金额为0时，利用率为0，否则利用率就等于 <code>总借款 / (资金池余额 + 总借款 - 储备金)</code>，代码中 <code>mul(1e18)</code> 是为了保持结果的精度。</p>
+<h4 id="借款利率"><a href="#借款利率" class="headerlink" title="借款利率"></a>借款利率</h4><p>借款利率代码如下：</p>
+<pre><code>function getBorrowRate(uint cash, uint borrows, uint reserves) public view returns (uint) &#123;
+    uint ur = utilizationRate(cash, borrows, reserves);
+    return ur.mul(multiplierPerBlock).div(1e18).add(baseRatePerBlock);
+&#125;
+</code></pre><p>首先求出利用率，然后根据直线公式 <code>区块级的利率增长速度 * 利用率 + 区块级的基础利率</code> 算出借款利率。这里 <code>div(1e18)</code> 是因为利用率和区块级的利率增长速度本身都已经扩为高精度整数了，相乘之后精度变成 36 了，所以再除以 1e18 就可以把精度降回 18。</p>
+<h4 id="存款利率"><a href="#存款利率" class="headerlink" title="存款利率"></a>存款利率</h4><p>存款利率公式如下：</p>
+<pre><code>function getSupplyRate(uint cash, uint borrows, uint reserves, uint reserveFactorMantissa) public view returns (uint) &#123;
+    uint oneMinusReserveFactor = uint(1e18).sub(reserveFactorMantissa);
+    uint borrowRate = getBorrowRate(cash, borrows, reserves);
+    uint rateToPool = borrowRate.mul(oneMinusReserveFactor).div(1e18);
+    return utilizationRate(cash, borrows, reserves).mul(rateToPool).div(1e18);
+&#125;
+</code></pre><p>上面的代码整理出来就是 <code>资金利用率 * 借款利率 * (1 - 储备金率)</code></p>
+<p>直线型利率模型的内容就是这些，比较简单易懂。</p>
+<h3 id="拐点型利率模型"><a href="#拐点型利率模型" class="headerlink" title="拐点型利率模型"></a>拐点型利率模型</h3><p>拐点型主要有过两个版本的实现，分别是 <code>JumpRateModel</code> 和 <code>JumpRateModelV2</code>，目前，曾经使用 <code>JumpRateModel</code> 的都已经升级为 <code>JumpRateModelV2</code>，所以我们就直接研究 <code>JumpRateModelV2</code> 即可。</p>
+<p>拐点型利率模型其实是是两个直线型利率的合成，在达到临界点前使用一条直接，在达到临界点之后使用另一条斜率更高的直线，只所以这么做是为了保护资金池，防止资金池中的资金被借空。</p>
+<p>资金使用率没超过拐点值时，利率公式和直线型的一样：</p>
+<pre><code>y = k*x + b
+</code></pre><p>而超过拐点之后，则利率公式将变成：</p>
+<pre><code>y = k2*(x - p) + (k*p + b)
+</code></pre><p>其中，<code>k2</code> 表示拐点后的直线的斜率，简称为拐点直线斜率，<code>p</code> 表示拐点的 x 轴的值，也即拐点利用率，<code>x - p</code> 表示超额利用率，<code>k*p + b</code> 表示拐点时 y 的高度，简称拐点y 值。</p>
+<p><code>JumpRateModelV2</code> 合约继承自 <code>BaseJumpRateModelV2</code> 合约，大部分操作由后者来完成。</p>
+<h4 id="构造利率模型-1"><a href="#构造利率模型-1" class="headerlink" title="构造利率模型"></a>构造利率模型</h4><p>拐点型利率模型的构造函数如下：</p>
+<pre><code>constructor(uint baseRatePerYear, uint multiplierPerYear, uint jumpMultiplierPerYear, uint kink_, address owner_)
+    BaseJumpRateModelV2(baseRatePerYear,multiplierPerYear,jumpMultiplierPerYear,kink_,owner_) public &#123;&#125;
+</code></pre><p>在构造函数中直接使用父合约的构造函数，从而代码体为空。</p>
+<p><code>BaseJumpRateModelV2</code> 合约的构造函数又调用 <code>updateJumpRateModelInternal</code> 函数。<code>updateJumpRateModelInternal</code> 函数代码如下：</p>
+<pre><code>function updateJumpRateModelInternal(uint baseRatePerYear, uint multiplierPerYear, uint jumpMultiplierPerYear, uint kink_) internal &#123;
+    // 拐点利用率之前，直线的截矩 b
+    baseRatePerBlock = baseRatePerYear.div(blocksPerYear);
+
+    // 拐点利用率之前，直线的斜率 k。注意这里的 k，与直接型利率模型中的有一些细微的不同。
+    multiplierPerBlock = (multiplierPerYear.mul(1e18)).div(blocksPerYear.mul(kink_));
+
+    // 拐点利用率之后，直线的斜率 k2
+    jumpMultiplierPerBlock = jumpMultiplierPerYear.div(blocksPerYear);
+
+    // 拐点时的资产利用率
+    kink = kink_;
+
+    emit NewInterestParams(baseRatePerBlock, multiplierPerBlock, jumpMultiplierPerBlock, kink);
+&#125;
+</code></pre><h4 id="利用率-1"><a href="#利用率-1" class="headerlink" title="利用率"></a>利用率</h4><p>无论是直线利率模型，还是拐点型利率模型，在计算利用率时都是一样，所以这里我们略过利用率的分析。</p>
+<h4 id="借款利率-1"><a href="#借款利率-1" class="headerlink" title="借款利率"></a>借款利率</h4><p>借款利率的计算直接调用了父合约中的 <code>getBorrowRateInternal</code> 方法，这个方法的代码如下：</p>
+<pre><code>function getBorrowRateInternal(uint cash, uint borrows, uint reserves) internal view returns (uint) &#123;
+    // 计算资产利用率
+    uint util = utilizationRate(cash, borrows, reserves);
+
+    if (util &lt;= kink) &#123; // 资产利用率没有超过拐点
+        return util.mul(multiplierPerBlock).div(1e18).add(baseRatePerBlock);
+    &#125; else &#123; // 资产利用率已经超过拐点
+
+        // 正常利率 = 拐点利用率 * 拐点前的斜率 + 截距
+        uint normalRate = kink.mul(multiplierPerBlock).div(1e18).add(baseRatePerBlock);
+
+        // 超额利用率
+        uint excessUtil = util.sub(kink);
+
+        // 超额利用率 * 拐点后斜率 + 正常利率
+        return excessUtil.mul(jumpMultiplierPerBlock).div(1e18).add(normalRate);
+    &#125;
+&#125;
+</code></pre><h4 id="存款利率-1"><a href="#存款利率-1" class="headerlink" title="存款利率"></a>存款利率</h4><p>存款利率代码如下：</p>
+<pre><code>function getSupplyRate(uint cash, uint borrows, uint reserves, uint reserveFactorMantissa) public view returns (uint) &#123;
+    uint oneMinusReserveFactor = uint(1e18).sub(reserveFactorMantissa);
+    uint borrowRate = getBorrowRateInternal(cash, borrows, reserves);
+    uint rateToPool = borrowRate.mul(oneMinusReserveFactor).div(1e18);
+    return utilizationRate(cash, borrows, reserves).mul(rateToPool).div(1e18);
+&#125;
+</code></pre><p>根据代码整理出来存储利率如下：</p>
+<pre><code>存款利率 = 资产利用率 * 借款利率 * (1 - 储备率)
+</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>因为篇幅所限，无法在一片短短的文章中完整地分析整个 Compound 项目，今天这篇文章我们只分析了 Compound 的 cToken 和利率模型等合约的核心部分，欢迎对 Compound 项目感兴趣的小伙伴同我一起完整地分析并研究这个项目。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%80%9F%E8%B4%B7/" rel="tag"># 借贷</a>
+              <a href="/tags/Compound/" rel="tag"># Compound</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/07/21/compound-protocol/" rel="prev" title="Compound 协议">
+      <i class="fa fa-chevron-left"></i> Compound 协议
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/26/contract-proxy/" rel="next" title="可升级的智能合约(未完待续)">
+      可升级的智能合约(未完待续) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Compound-%E5%90%88%E7%BA%A6%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">Compound 合约简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CToken-CErc20-%E5%92%8C-CEther"><span class="nav-number">2.</span> <span class="nav-text">CToken, CErc20 和 CEther</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E5%9D%8A%E8%B4%A7%E5%B8%81%E5%B8%82%E5%9C%BA"><span class="nav-number">2.1.</span> <span class="nav-text">以太坊货币市场</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%84%E9%80%A0-ETH-%E8%B4%A7%E5%B8%81%E5%B8%82%E5%9C%BA"><span class="nav-number">2.1.1.</span> <span class="nav-text">构造 ETH 货币市场</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E6%AC%BE-mint"><span class="nav-number">2.1.2.</span> <span class="nav-text">存款 mint</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%8E%E5%9B%9E%E5%AD%98%E6%AC%BE-redeem"><span class="nav-number">2.1.3.</span> <span class="nav-text">赎回存款 redeem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%80%9F%E6%AC%BE-borrow"><span class="nav-number">2.1.4.</span> <span class="nav-text">借款 borrow</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%98%E6%AC%BE-repayBorrow"><span class="nav-number">2.1.5.</span> <span class="nav-text">还款 repayBorrow</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ERC20-%E8%B4%A7%E5%B8%81%E5%B8%82%E5%9C%BA"><span class="nav-number">2.2.</span> <span class="nav-text">ERC20 货币市场</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%8E%87%E5%90%88%E7%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">利率合约</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B4%E7%BA%BF%E5%9E%8B%E5%88%A9%E7%8E%87%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">直线型利率模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%88%A9%E7%8E%87%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.1.1.</span> <span class="nav-text">构造利率模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E7%8E%87"><span class="nav-number">3.1.2.</span> <span class="nav-text">利用率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%80%9F%E6%AC%BE%E5%88%A9%E7%8E%87"><span class="nav-number">3.1.3.</span> <span class="nav-text">借款利率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E6%AC%BE%E5%88%A9%E7%8E%87"><span class="nav-number">3.1.4.</span> <span class="nav-text">存款利率</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%90%E7%82%B9%E5%9E%8B%E5%88%A9%E7%8E%87%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">拐点型利率模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%88%A9%E7%8E%87%E6%A8%A1%E5%9E%8B-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">构造利率模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E7%8E%87-1"><span class="nav-number">3.2.2.</span> <span class="nav-text">利用率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%80%9F%E6%AC%BE%E5%88%A9%E7%8E%87-1"><span class="nav-number">3.2.3.</span> <span class="nav-text">借款利率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E6%AC%BE%E5%88%A9%E7%8E%87-1"><span class="nav-number">3.2.4.</span> <span class="nav-text">存款利率</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">乔疯</p>
+  <div class="site-description" itemprop="description">DeFi，区块链的大海星辰</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乔疯</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"jTgwNa8LqrJW9NFiPPlB10D5-gzGzoHsz","app_key":"CAOP7YrhhC4eyJe8QPngjVAC","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
