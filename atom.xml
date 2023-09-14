@@ -3,11 +3,11 @@
   <title>Hexo</title>
   
   
-  <link href="http://example.com/atom.xml" rel="self"/>
+  <link href="http://www.cryptoai.fans/atom.xml" rel="self"/>
   
-  <link href="http://example.com/"/>
-  <updated>2023-09-14T09:11:10.687Z</updated>
-  <id>http://example.com/</id>
+  <link href="http://www.cryptoai.fans/"/>
+  <updated>2023-09-14T11:28:48.508Z</updated>
+  <id>http://www.cryptoai.fans/</id>
   
   <author>
     <name>Qiao Feng</name>
@@ -18,43 +18,20 @@
   
   <entry>
     <title>什么是 Pendle？一文读懂 PENDLE</title>
-    <link href="http://example.com/2023/09/14/whatispendle/"/>
-    <id>http://example.com/2023/09/14/whatispendle/</id>
+    <link href="http://www.cryptoai.fans/2023/09/14/whatispendle/"/>
+    <id>http://www.cryptoai.fans/2023/09/14/whatispendle/</id>
     <published>2023-09-14T08:57:38.000Z</published>
-    <updated>2023-09-14T09:11:10.687Z</updated>
+    <updated>2023-09-14T11:28:48.508Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;关于-Pendle&quot;&gt;&lt;a href=&quot;#关于-Pendle&quot; class=&quot;headerlink&quot; title=&quot;关于 Pendle&quot;&gt;&lt;/a&gt;关于 Pendle&lt;/h1&gt;&lt;p&gt;Pendle</summary>
-        
-      
+    <summary type="html">&lt;h1 id=&quot;关于-Pendle&quot;&gt;&lt;a href=&quot;#关于-Pendle&quot; class=&quot;headerlink&quot; title=&quot;关于 Pendle&quot;&gt;&lt;/a&gt;关于 Pendle&lt;/h1&gt;&lt;p&gt;Pendle 是一种去中心化金融（DeFi）协议，构建于以太坊区块链。它致力于为用户提供简单直观的平台，以支持交易、流动性挖矿以及为代币化收益资产提供流动性。换言之，该协议的用户可参与流动性挖矿以赚取其持有加密货币的利息，而通过流动性挖矿将资产借给流动性池以换取奖励。该协议的独特之处在于，它允许用户交易这些代币化收益并为其定价，这让资产能在更广泛的市场上获得且更加透明化。Pendle 协议的原生代币为 PENDLE，在平台内用于治理和质押。&lt;/p&gt;</summary>
     
     
     
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://example.com/2023/09/14/hello-world/"/>
-    <id>http://example.com/2023/09/14/hello-world/</id>
-    <published>2023-09-14T02:43:24.100Z</published>
-    <updated>2023-09-14T02:43:24.100Z</updated>
+    <category term="blockchain" scheme="http://www.cryptoai.fans/categories/blockchain/"/>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt;</summary>
-        
-      
-    
-    
-    
+    <category term="defi" scheme="http://www.cryptoai.fans/tags/defi/"/>
     
   </entry>
   

@@ -1,27 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2023/09/14/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>什么是 Pendle？一文读懂 PENDLE</title>
     <url>/2023/09/14/whatispendle/</url>
     <content><![CDATA[<h1 id="关于-Pendle"><a href="#关于-Pendle" class="headerlink" title="关于 Pendle"></a>关于 Pendle</h1><p>Pendle 是一种去中心化金融（DeFi）协议，构建于以太坊区块链。它致力于为用户提供简单直观的平台，以支持交易、流动性挖矿以及为代币化收益资产提供流动性。换言之，该协议的用户可参与流动性挖矿以赚取其持有加密货币的利息，而通过流动性挖矿将资产借给流动性池以换取奖励。该协议的独特之处在于，它允许用户交易这些代币化收益并为其定价，这让资产能在更广泛的市场上获得且更加透明化。Pendle 协议的原生代币为 PENDLE，在平台内用于治理和质押。</p>
+<span id="more"></span>
+
 <h2 id="Pendle-PENDLE-的历史"><a href="#Pendle-PENDLE-的历史" class="headerlink" title="Pendle (PENDLE) 的历史"></a>Pendle (PENDLE) 的历史</h2><p>2021年7月，Tong 和 Josh 领导的开发团队推出 Pendle。该团队曾参与建设过其他几个区块链项目。他们从使用其他 DeFi 协议的经验中获得创建 Pendle 的想法，并且注意到市场缺乏交易和定价代币化收益资产的服务，因而看到了创建一个更加人性化、将允许任何人参与流动性挖矿和提供流动性的平台的机会。</p>
 <p>2021年9月，在由 Mechanism Capital 领投、其他领先风投公司参与的一轮融资中，Pendle 筹集了350万美元。这些资金用于进一步开发该协议并扩大其用户群。随后在2021年10月，Pendle V2 得以推出，引入了多种新功能，包括多质押品池和优化的用户界面。</p>
 <p>自推出以来，Pendle 一直备受欢迎。截至2023年5月，其总锁定价值 (TVL) 达2亿多美元。该平台还与多个其他领先 DeFi 协议（例如 Aave 和 Curve）建立了合作伙伴关系，以扩大其影响范围并为用户提供更多的流动性挖矿和流动性供应选择。</p>
@@ -54,5 +38,11 @@
 <h2 id="vePendle"><a href="#vePendle" class="headerlink" title="vePendle"></a>vePendle</h2><p>vePendle 是一种治理代币，为用户提供 Pendle 生态系统中的投票权。该代币通过在平台的治理池中将PENDLE 代币质押锁定一段时间来赚取的。在此期间，用户会收到 vePendle 代币，代表他们在 Pendle DAO 中的投票权。质押 PENDLE 代币的时间越长，用户收到的 vePendle 代币就越多，同样这又加大了他们在 DAO 中的投票权。</p>
 <p>vePendle 为用户提供了多种优势，包括提供参与平台治理并影响平台发展方向的权利。因此，用户能在协议升级、费用结构和合作伙伴关系等重要决策中持有发言权。此外，vePendle 还向用户提供部分交易费用作为奖励，这是根据比例支付给 vePendle 持有者的。</p>
 ]]></content>
+      <categories>
+        <category>blockchain</category>
+      </categories>
+      <tags>
+        <tag>defi</tag>
+      </tags>
   </entry>
 </search>
