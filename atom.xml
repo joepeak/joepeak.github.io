@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>区块链与AI</title>
+  <title>区块链与AI，你未来世界的私人助理</title>
   
   
   <link href="http://www.cryptoai.fans/atom.xml" rel="self"/>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>100 倍币投资指南</title>
-    <link href="http://www.cryptoai.fans/2023/09/15/100-return/"/>
-    <id>http://www.cryptoai.fans/2023/09/15/100-return/</id>
+    <link href="http://www.cryptoai.fans/20230915/100-return/"/>
+    <id>http://www.cryptoai.fans/20230915/100-return/</id>
     <published>2023-09-15T04:14:32.000Z</published>
     <updated>2023-09-15T04:50:39.556Z</updated>
     
@@ -36,8 +36,8 @@
   
   <entry>
     <title>什么是 Pendle？一文读懂 PENDLE</title>
-    <link href="http://www.cryptoai.fans/2023/09/14/whatispendle/"/>
-    <id>http://www.cryptoai.fans/2023/09/14/whatispendle/</id>
+    <link href="http://www.cryptoai.fans/20230914/whatispendle/"/>
+    <id>http://www.cryptoai.fans/20230914/whatispendle/</id>
     <published>2023-09-14T08:57:38.000Z</published>
     <updated>2023-09-14T11:28:48.508Z</updated>
     
