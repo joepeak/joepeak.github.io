@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.cryptoai.fans/20230920/inverst-racetrack/</loc>
+    
+    <lastmod>2023-09-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://www.cryptoai.fans/20230915/100-return/</loc>
     
     <lastmod>2023-09-15</lastmod>
@@ -76,7 +85,7 @@
 
   <url>
     <loc>http://www.cryptoai.fans/</loc>
-    <lastmod>2023-09-15</lastmod>
+    <lastmod>2023-09-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -84,14 +93,14 @@
   
   <url>
     <loc>http://www.cryptoai.fans/tags/defi/</loc>
-    <lastmod>2023-09-15</lastmod>
+    <lastmod>2023-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://www.cryptoai.fans/tags/invest/</loc>
-    <lastmod>2023-09-15</lastmod>
+    <lastmod>2023-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -100,7 +109,7 @@
   
   <url>
     <loc>http://www.cryptoai.fans/categories/blockchain/</loc>
-    <lastmod>2023-09-15</lastmod>
+    <lastmod>2023-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
