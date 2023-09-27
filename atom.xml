@@ -1,90 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>CryptoAI，未来世界的私人助理</title>
+  <title>{{ config.title }}</title>
   
   
-  <link href="http://www.cryptoai.fans/atom.xml" rel="self"/>
+  <link href="{{ feed_url | uriencode }}" rel="self"/>
   
-  <link href="http://www.cryptoai.fans/"/>
-  <updated>2023-09-23T02:38:22.467Z</updated>
-  <id>http://www.cryptoai.fans/</id>
+  <link href="{{ url | uriencode }}"/>
+  <updated>{{ posts.first().updated.toISOString() }}</updated>
+  <id>{{ url | uriencode }}</id>
   
   <author>
-    <name>Qiao Feng</name>
+    <name>{{ config.author }}</name>
     
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>成功投资第二步之叙事</title>
-    <link href="http://www.cryptoai.fans/20230923/inverst-narration/"/>
-    <id>http://www.cryptoai.fans/20230923/inverst-narration/</id>
-    <published>2023-09-23T01:53:05.000Z</published>
-    <updated>2023-09-23T02:38:22.467Z</updated>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
     
     
-    <summary type="html">&lt;h2 id=&quot;为什么叙事重要&quot;&gt;&lt;a href=&quot;#为什么叙事重要&quot; class=&quot;headerlink&quot; title=&quot;为什么叙事重要&quot;&gt;&lt;/a&gt;为什么叙事重要&lt;/h2&gt;&lt;p&gt;成功投资的第二步就是叙事。叙事通俗的说就是也就是讲故事，看下项目要做，项目的愿景和路线图，看起来很俗是不是？可这确是不可缺少的，正所谓师出有名，名不正，则言不顺，做任何事情都要有个缘由，缘由正确了，后面才有可能走的更顺。&lt;/p&gt;
-&lt;h2 id=&quot;什么样的叙事才是好的叙事？&quot;&gt;&lt;a href=&quot;#什么样的叙事才是好的叙事？&quot; class=&quot;headerlink&quot; title=&quot;什么样的叙事才是好的叙事？&quot;&gt;&lt;/a&gt;什么样的叙事才是好的叙事？&lt;/h2&gt;</summary>
-    
-    
-    
-    
-    <category term="invest" scheme="http://www.cryptoai.fans/tags/invest/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>成功投资第一步之赛道</title>
-    <link href="http://www.cryptoai.fans/20230920/inverst-racetrack/"/>
-    <id>http://www.cryptoai.fans/20230920/inverst-racetrack/</id>
-    <published>2023-09-20T03:54:01.000Z</published>
-    <updated>2023-09-23T02:37:47.869Z</updated>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;为什么赛道重要&quot;&gt;&lt;a href=&quot;#为什么赛道重要&quot; class=&quot;headerlink&quot; title=&quot;为什么赛道重要&quot;&gt;&lt;/a&gt;为什么赛道重要&lt;/h2&gt;&lt;p&gt;成功投资的第一步就是选择赛道。为什么这么说呢，因为不同周期面临不同的问题，不同的问题造就不同的玩法，这些所谓的玩法就是赛道。大家都知道风口来了猪也会飞，台风来了逆着风，即使头大象也会被吹的无影无踪，所以想要自己投资有所成就就要顺着周期来了，顺着趋势来了，顺着赛道了。&lt;/p&gt;</summary>
+    <summary type="html">{{ post.excerpt }}</summary>
     
     
     
     
-    <category term="invest" scheme="http://www.cryptoai.fans/tags/invest/"/>
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
   </entry>
   
   <entry>
-    <title>100 倍币投资指南</title>
-    <link href="http://www.cryptoai.fans/20230915/100-return/"/>
-    <id>http://www.cryptoai.fans/20230915/100-return/</id>
-    <published>2023-09-15T04:14:32.000Z</published>
-    <updated>2023-09-23T02:37:40.917Z</updated>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
     
     
-    <summary type="html">&lt;h1 id=&quot;百倍币的梦想与野望&quot;&gt;&lt;a href=&quot;#百倍币的梦想与野望&quot; class=&quot;headerlink&quot; title=&quot;百倍币的梦想与野望&quot;&gt;&lt;/a&gt;百倍币的梦想与野望&lt;/h1&gt;&lt;p&gt;每一个进入币圈的人都有着一夜暴富的梦想，而每一轮牛熊的更替也给了市场参与者这样的机会，这一轮牛熊也给我们这样的机会。如何找到这样的机会就成了每个参与者需要思考的难题。&lt;/p&gt;
-&lt;p&gt;基于对大量暴富币的研究，本文提供了一些视角和方法论可以供大家参考。&lt;/p&gt;</summary>
+    <summary type="html">{{ post.excerpt }}</summary>
     
     
     
     
-    <category term="invest" scheme="http://www.cryptoai.fans/tags/invest/"/>
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
   </entry>
   
   <entry>
-    <title>什么是 Pendle？一文读懂 PENDLE</title>
-    <link href="http://www.cryptoai.fans/20230914/whatispendle/"/>
-    <id>http://www.cryptoai.fans/20230914/whatispendle/</id>
-    <published>2023-09-14T08:57:38.000Z</published>
-    <updated>2023-09-23T02:37:25.576Z</updated>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
     
     
-    <summary type="html">&lt;h1 id=&quot;关于-Pendle&quot;&gt;&lt;a href=&quot;#关于-Pendle&quot; class=&quot;headerlink&quot; title=&quot;关于 Pendle&quot;&gt;&lt;/a&gt;关于 Pendle&lt;/h1&gt;&lt;p&gt;Pendle 是一种去中心化金融（DeFi）协议，构建于以太坊区块链。它致力于为用户提供简单直观的平台，以支持交易、流动性挖矿以及为代币化收益资产提供流动性。换言之，该协议的用户可参与流动性挖矿以赚取其持有加密货币的利息，而通过流动性挖矿将资产借给流动性池以换取奖励。该协议的独特之处在于，它允许用户交易这些代币化收益并为其定价，这让资产能在更广泛的市场上获得且更加透明化。Pendle 协议的原生代币为 PENDLE，在平台内用于治理和质押。&lt;/p&gt;</summary>
+    <summary type="html">{{ post.excerpt }}</summary>
     
     
     
-    <category term="blockchain" scheme="http://www.cryptoai.fans/categories/blockchain/"/>
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
+  </entry>
+  
+  <entry>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
     
     
-    <category term="defi" scheme="http://www.cryptoai.fans/tags/defi/"/>
+    <summary type="html">{{ post.excerpt }}</summary>
+    
+    
+    
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
+  </entry>
+  
+  <entry>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
+    
+    
+    <summary type="html">{{ post.excerpt }}</summary>
+    
+    
+    
+    <category term="{{ category.name }}" scheme="{{ category.permalink }}"/>
+    
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
   </entry>
   

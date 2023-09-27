@@ -2,90 +2,99 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.cryptoai.fans/20230923/inverst-narration/</loc>
+    <loc>{{ post.permalink | uriencode }}</loc>
     
-    <lastmod>2023-09-23</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.cryptoai.fans/20230920/inverst-racetrack/</loc>
-    
-    <lastmod>2023-09-23</lastmod>
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.cryptoai.fans/20230915/100-return/</loc>
+    <loc>{{ post.permalink | uriencode }}</loc>
     
-    <lastmod>2023-09-23</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.cryptoai.fans/20230914/whatispendle/</loc>
-    
-    <lastmod>2023-09-23</lastmod>
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.cryptoai.fans/friends/index.html</loc>
+    <loc>{{ post.permalink | uriencode }}</loc>
     
-    <lastmod>2023-09-15</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.cryptoai.fans/invest/index.html</loc>
-    
-    <lastmod>2023-09-15</lastmod>
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.cryptoai.fans/other/index.html</loc>
+    <loc>{{ post.permalink | uriencode }}</loc>
     
-    <lastmod>2023-09-15</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.cryptoai.fans/tags/index.html</loc>
-    
-    <lastmod>2023-09-14</lastmod>
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.cryptoai.fans/photos/index.html</loc>
+    <loc>{{ post.permalink | uriencode }}</loc>
     
-    <lastmod>2023-09-14</lastmod>
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.cryptoai.fans/categories/index.html</loc>
+    <loc>{{ post.permalink | uriencode }}</loc>
     
-    <lastmod>2023-09-14</lastmod>
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>{{ post.permalink | uriencode }}</loc>
+    
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>{{ post.permalink | uriencode }}</loc>
+    
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>{{ post.permalink | uriencode }}</loc>
+    
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>{{ post.permalink | uriencode }}</loc>
+    
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>{{ post.permalink | uriencode }}</loc>
+    
+    <lastmod>{{ post.updated | formatDate }}</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -93,23 +102,37 @@
   
 
   <url>
-    <loc>http://www.cryptoai.fans/</loc>
-    <lastmod>2023-09-23</lastmod>
+    <loc>{{ config.url | uriencode }}</loc>
+    <lastmod>{{ sNow | formatDate }}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
   <url>
-    <loc>http://www.cryptoai.fans/tags/defi/</loc>
-    <lastmod>2023-09-23</lastmod>
+    <loc>{{ tag.permalink | uriencode }}</loc>
+    <lastmod>{{ sNow | formatDate }}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://www.cryptoai.fans/tags/invest/</loc>
-    <lastmod>2023-09-23</lastmod>
+    <loc>{{ tag.permalink | uriencode }}</loc>
+    <lastmod>{{ sNow | formatDate }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>{{ tag.permalink | uriencode }}</loc>
+    <lastmod>{{ sNow | formatDate }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>{{ tag.permalink | uriencode }}</loc>
+    <lastmod>{{ sNow | formatDate }}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -117,8 +140,8 @@
 
   
   <url>
-    <loc>http://www.cryptoai.fans/categories/blockchain/</loc>
-    <lastmod>2023-09-23</lastmod>
+    <loc>{{ cat.permalink | uriencode }}</loc>
+    <lastmod>{{ sNow | formatDate }}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
