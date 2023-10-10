@@ -44,4 +44,13 @@
         <tag>{{ tag }}</tag>
       </tags>
   </entry>
+  <entry>
+    <title>{{ article.title }}</title>
+    <url>{{ article.url }}</url>
+    <content><![CDATA[{{ article.content | safe }}]]></content>
+      <tags>
+        <tag>{{ tag }}</tag>
+        <tag>{{ tag }}</tag>
+      </tags>
+  </entry>
 </search>
